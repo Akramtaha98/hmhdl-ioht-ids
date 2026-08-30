@@ -1,0 +1,26 @@
+{
+  "cnn_only": {
+    "val_acc": 0.8739606142044067,
+    "n_params": 352
+  },
+  "cnn_lstm": {
+    "val_acc": 0.8748359084129333,
+    "n_params": 6838
+  },
+  "cnn_gru": {
+    "val_acc": 0.8748359084129333,
+    "n_params": 5848
+  },
+  "cnn_lstm_gru": {
+    "val_acc": 0.8835886120796204,
+    "n_params": 11214
+  },
+  "full": {
+    "val_acc": 0.8792122602462769,
+    "n_params": 13959
+  },
+  "full_default": {
+    "val_acc": 0.8757111430168152,
+    "n_params": 22465
+  }
+}

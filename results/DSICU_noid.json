@@ -1,0 +1,12 @@
+{
+  "dropped_features": "tcp.srcport, tcp.dstport",
+  "accuracy": 1.0,
+  "balanced_accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "roc_auc": 0.9999999999999999,
+  "pr_auc": 1.0,
+  "epochs_run": 30,
+  "n_features": 14
+}

@@ -1,0 +1,23 @@
+{
+  "split_type": "group (srcport,dstport)",
+  "accuracy": 1.0,
+  "balanced_accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "roc_auc": 1.0,
+  "pr_auc": 1.0,
+  "confusion_matrix": [
+    [
+      34313,
+      0
+    ],
+    [
+      0,
+      22058
+    ]
+  ],
+  "epochs_run": 12,
+  "n_train": 132323,
+  "n_test": 56371
+}

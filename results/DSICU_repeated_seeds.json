@@ -1,0 +1,67 @@
+{
+  "n_seeds": 4,
+  "seeds": [
+    42,
+    43,
+    44,
+    45
+  ],
+  "note": "4 runs (main seed 42 at the full 80-epoch/patience-8 budget, plus 3 additional seeds at a reduced 25-epoch/patience-5 budget) on the SAME main random-split train/test partition; varies weight initialization and minibatch order only.",
+  "mean": {
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0
+  },
+  "std": {
+    "accuracy": 0.0,
+    "balanced_accuracy": 0.0,
+    "precision": 0.0,
+    "recall": 0.0,
+    "f1": 0.0
+  },
+  "per_seed": [
+    {
+      "seed": 42,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    },
+    {
+      "seed": 43,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "epochs_run": 16
+    },
+    {
+      "seed": 44,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 0.9999999999999999,
+      "epochs_run": 13
+    },
+    {
+      "seed": 45,
+      "accuracy": 1.0,
+      "balanced_accuracy": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "roc_auc": 1.0,
+      "pr_auc": 1.0,
+      "epochs_run": 13
+    }
+  ]
+}

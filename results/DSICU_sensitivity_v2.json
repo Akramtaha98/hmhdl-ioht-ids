@@ -1,0 +1,32 @@
+{
+  "split_type": "group / srcport,dstport (ports dropped as feature)",
+  "hyperparam_source": "independent random search (42 candidates, matched to the main experiment's budget) inside this split's own training partition",
+  "best_params": {
+    "n_conv_blocks": 3,
+    "conv_filters": 36,
+    "lstm_units": 36,
+    "gru_units": 59,
+    "dropout_rate": 0.3155969191613304
+  },
+  "accuracy": 1.0,
+  "balanced_accuracy": 1.0,
+  "precision": 1.0,
+  "recall": 1.0,
+  "f1": 1.0,
+  "roc_auc": 1.0,
+  "pr_auc": 1.0,
+  "confusion_matrix": [
+    [
+      34313,
+      0
+    ],
+    [
+      0,
+      22058
+    ]
+  ],
+  "epochs_run": 32,
+  "n_train": 132323,
+  "n_test": 56371,
+  "n_features": 14
+}

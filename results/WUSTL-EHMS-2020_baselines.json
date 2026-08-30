@@ -1,0 +1,34 @@
+{
+  "Logistic Regression": {
+    "accuracy": 0.9279003267973857,
+    "balanced_accuracy": 0.7223066179614079,
+    "precision": 0.9515570934256056,
+    "recall": 0.44788273615635177,
+    "f1": 0.6090808416389811,
+    "train_time_sec": 0.29956674575805664
+  },
+  "Random Forest": {
+    "accuracy": 0.9379084967320261,
+    "balanced_accuracy": 0.7615113337096275,
+    "precision": 0.9613095238095238,
+    "recall": 0.5260586319218241,
+    "f1": 0.68,
+    "train_time_sec": 0.8376574516296387
+  },
+  "Gradient Boosting (Hist)": {
+    "accuracy": 0.9726307189542484,
+    "balanced_accuracy": 0.9027380733226125,
+    "precision": 0.9669260700389105,
+    "recall": 0.8094462540716613,
+    "f1": 0.8812056737588653,
+    "train_time_sec": 0.19197797775268555
+  },
+  "MLP": {
+    "accuracy": 0.9307598039215687,
+    "balanced_accuracy": 0.7316145762809854,
+    "precision": 0.9629629629629629,
+    "recall": 0.46579804560260585,
+    "f1": 0.6278814489571899,
+    "train_time_sec": 0.39734482765197754
+  }
+}

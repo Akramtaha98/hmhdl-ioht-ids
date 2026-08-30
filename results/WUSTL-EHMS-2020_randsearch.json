@@ -1,0 +1,11 @@
+{
+  "best_val_acc": 0.9150984883308411,
+  "best_params": {
+    "n_conv_blocks": 1,
+    "conv_filters": 58,
+    "lstm_units": 39,
+    "gru_units": 25,
+    "dropout_rate": 0.3184116101973612
+  },
+  "n_candidates": 42
+}

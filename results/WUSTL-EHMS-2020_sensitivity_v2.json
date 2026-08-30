@@ -1,0 +1,32 @@
+{
+  "split_type": "temporal (Packet_num dropped as feature)",
+  "hyperparam_source": "independent random search (42 candidates, matched to the main experiment's budget) inside this split's own training partition",
+  "best_params": {
+    "n_conv_blocks": 1,
+    "conv_filters": 47,
+    "lstm_units": 62,
+    "gru_units": 23,
+    "dropout_rate": 0.22586289243862068
+  },
+  "accuracy": 0.9050245098039216,
+  "balanced_accuracy": 0.6805289426657325,
+  "precision": 0.6899696048632219,
+  "recall": 0.3847457627118644,
+  "f1": 0.4940152339499456,
+  "roc_auc": 0.6483202390043061,
+  "pr_auc": 0.489780272985749,
+  "confusion_matrix": [
+    [
+      4204,
+      102
+    ],
+    [
+      363,
+      227
+    ]
+  ],
+  "epochs_run": 80,
+  "n_train": 11422,
+  "n_test": 4896,
+  "n_features": 30
+}

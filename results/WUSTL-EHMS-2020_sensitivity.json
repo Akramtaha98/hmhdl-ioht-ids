@@ -1,0 +1,23 @@
+{
+  "split_type": "temporal (Packet_num)",
+  "accuracy": 0.9199346405228758,
+  "balanced_accuracy": 0.6860801246978988,
+  "precision": 0.8991935483870968,
+  "recall": 0.37796610169491524,
+  "f1": 0.5322195704057279,
+  "roc_auc": 0.7968490950742756,
+  "pr_auc": 0.560493132816116,
+  "confusion_matrix": [
+    [
+      4281,
+      25
+    ],
+    [
+      367,
+      223
+    ]
+  ],
+  "epochs_run": 20,
+  "n_train": 11422,
+  "n_test": 4896
+}

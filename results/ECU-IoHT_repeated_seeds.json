@@ -1,0 +1,67 @@
+{
+  "n_seeds": 4,
+  "seeds": [
+    42,
+    43,
+    44,
+    45
+  ],
+  "note": "4 runs (main seed 42 at the full 80-epoch/patience-8 budget, plus 3 additional seeds at a reduced 25-epoch/patience-5 budget) on the SAME main random-split train/test partition; varies weight initialization and minibatch order only.",
+  "mean": {
+    "accuracy": 0.9827053922009412,
+    "balanced_accuracy": 0.9749564101127826,
+    "precision": 0.9897694307718737,
+    "recall": 0.988357959509249,
+    "f1": 0.9890311140855448
+  },
+  "std": {
+    "accuracy": 0.0008298335401436981,
+    "balanced_accuracy": 0.006646998242973454,
+    "precision": 0.0051381697709028135,
+    "recall": 0.0061315637745923204,
+    "f1": 0.0005861166094678576
+  },
+  "per_seed": [
+    {
+      "seed": 42,
+      "accuracy": 0.9831250187333274,
+      "balanced_accuracy": 0.9720719895723512,
+      "precision": 0.9874744569741921,
+      "recall": 0.9911877540167888,
+      "f1": 0.9893276211779425
+    },
+    {
+      "seed": 43,
+      "accuracy": 0.9827653388484249,
+      "balanced_accuracy": 0.9691363845403222,
+      "precision": 0.9855569801644166,
+      "recall": 0.992707106772515,
+      "f1": 0.9891191219604504,
+      "roc_auc": 0.9986817250302764,
+      "pr_auc": 0.9996541742747893,
+      "epochs_run": 23
+    },
+    {
+      "seed": 44,
+      "accuracy": 0.981356592632557,
+      "balanced_accuracy": 0.9862603981244069,
+      "precision": 0.9985647232243299,
+      "recall": 0.9777794659475063,
+      "f1": 0.9880627950715849,
+      "roc_auc": 0.9984295045910214,
+      "pr_auc": 0.999595282184461,
+      "epochs_run": 21
+    },
+    {
+      "seed": 45,
+      "accuracy": 0.9835746185894554,
+      "balanced_accuracy": 0.9723568682140498,
+      "precision": 0.9874815627245566,
+      "recall": 0.9917575113001861,
+      "f1": 0.9896149181322014,
+      "roc_auc": 0.9986550672563005,
+      "pr_auc": 0.9996496219678289,
+      "epochs_run": 45
+    }
+  ]
+}

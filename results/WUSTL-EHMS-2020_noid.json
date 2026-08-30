@@ -1,0 +1,12 @@
+{
+  "dropped_features": "Packet_num",
+  "accuracy": 0.9287173202614379,
+  "balanced_accuracy": 0.7248663825695625,
+  "precision": 0.9553264604810997,
+  "recall": 0.4527687296416938,
+  "f1": 0.6143646408839779,
+  "roc_auc": 0.8618708418088292,
+  "pr_auc": 0.6856956405826349,
+  "epochs_run": 40,
+  "n_features": 29
+}
