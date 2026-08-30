@@ -1,6 +1,6 @@
 <div align="center">
 
-# HMHDL — Hybrid Lionfish-Tuned Deep Learning for IoHT Intrusion Detection
+# HMHDL - Hybrid Lionfish-Tuned Deep Learning for IoHT Intrusion Detection
 
 **Supplementary code and results for a split-aware evaluation of a Lionfish-tuned CNN-LSTM-GRU-Attention model across three Internet of Health Things intrusion-detection benchmarks.**
 
