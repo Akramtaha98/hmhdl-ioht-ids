@@ -1,0 +1,36 @@
+cff-version: 1.2.0
+message: >-
+  If you use this code or the accompanying results, please cite the
+  manuscript below. This repository is the supplementary reproducibility
+  package for that work.
+type: software
+title: >-
+  Supplementary Materials: A Split-Aware Evaluation of Lionfish-Tuned
+  Hybrid Deep Learning for Internet of Health Things Intrusion Detection
+authors:
+  - family-names: Tarish
+    given-names: Hiba A.
+    affiliation: >-
+      Centre for Cyber Security, Faculty of Information Science and
+      Technology, Universiti Kebangsaan Malaysia (UKM), Bangi, Selangor,
+      Malaysia; Civil Engineering Department, University of Technology,
+      Baghdad, Iraq
+  - family-names: Hassan
+    given-names: Rosilah
+    affiliation: >-
+      Centre for Cyber Security, Faculty of Information Science and
+      Technology, Universiti Kebangsaan Malaysia (UKM), Bangi, Selangor,
+      Malaysia
+  - family-names: Zainol Ariffin
+    given-names: Khairul Akram
+    affiliation: >-
+      Centre for Cyber Security, Faculty of Information Science and
+      Technology, Universiti Kebangsaan Malaysia (UKM), Bangi, Selangor,
+      Malaysia
+  - family-names: Jaber
+    given-names: Mustafa Musa
+    email: mustafa.musa@iips.edu.iq
+    affiliation: >-
+      Informatics Institute for Postgraduate Studies, Iraqi Commission for
+      Computers and Informatics, Baghdad, Iraq
+repository-code: 'https://github.com/Akramtaha98/hmhdl-ioht-ids'
