@@ -170,28 +170,28 @@ ORIG_OVERRIDE = {
         "models [31].",
     29: "Algethami and Alshamrani proposed a hybrid deep-learning intrusion detection architecture "
         "(HANN-BLSTM) to secure the transmission of sensitive health data across heterogeneous "
-        "IoHT domains. Evaluated on both binary and multiclass attack tasks -- ARP spoofing, DoS, "
+        "IoMT domains. Evaluated on both binary and multiclass attack tasks -- ARP spoofing, DoS, "
         "Nmap port scans, and Smurf floods -- the model achieved a 99.85% mean weighted accuracy "
         "in the multiclass setting. The most significant limitation the authors report is reduced "
         "precision specifically on Smurf-attack detection, which they suggest may require "
         "additional architectural depth or continual-learning capability to generalize to "
         "unmapped, zero-day attack variants [32].",
     30: "Alohali et al. proposed EloHTSCD-SEGO, an AI-based anomaly detection framework for "
-        "heterogeneous IoHT devices designed to secure systems against covert data exfiltration. "
+        "heterogeneous IoMT devices designed to secure systems against covert data exfiltration. "
         "Evaluated on the ECU-IoHT benchmark, the framework reached a best classification accuracy "
         "of 99.33% with an optimized processing time of 10.92 minutes, outperforming "
         "state-of-the-art deep-learning and LightGBM baselines. The authors identify reliance on a "
         "static dataset -- which may not capture the real-world diversity of attack behavior -- as "
         "a key limitation [33].",
     31: "Mosaiyebzadeh et al. designed a privacy-preserving federated learning framework for "
-        "securing IoHT device traffic, evaluating feedforward DNN and CNN architectures against "
+        "securing IoMT device traffic, evaluating feedforward DNN and CNN architectures against "
         "membership-inference and model-poisoning attacks; the CNN variant achieved the best "
         "accuracy at 95.48%. The authors report that the framework's performance is "
         "architecturally sensitive to gradient-noise tuning, with precision dropping noticeably "
         "under certain noise settings [34].",
     33: "Alharbi and Khan benchmarked five traditional machine-learning algorithms -- decision "
         "tree, random forest, naive Bayes, k-nearest neighbors, and logistic regression -- for "
-        "IoHT intrusion detection, finding that random forest achieved the highest classification "
+        "IoMT intrusion detection, finding that random forest achieved the highest classification "
         "accuracy at 98%. The authors identify the framework's reliance on a down-sampled, static "
         "data schema as its key limitation, noting that this schema may not accurately represent "
         "the nonlinear, real-time load characteristics of live clinical network traffic [35].",
@@ -265,7 +265,7 @@ ORIG_OVERRIDE = {
         "medical contexts with patient-privacy constraints -- along with added initialization "
         "latency from its dual-stage configuration, as its main limitations [43].",
     10: "To address these limitations, this study evaluates a Lionfish-optimized CNN-LSTM-GRU-"
-        "Attention framework for binary IoHT intrusion detection under a split-aware protocol. The "
+        "Attention framework for binary IoMT intrusion detection under a split-aware protocol. The "
         "pipeline first removes redundant records and non-informative fields, ranks the retained "
         "variables by an ANOVA F-test, and standardizes them. Lionfish Optimization then searches "
         "for an effective combination of the number of Conv1D blocks, convolutional filter count, "
@@ -512,12 +512,11 @@ def add_figure(path, caption, width_in=5.5):
 doc.add_paragraph("Article", style="MDPI_1.1_article_type")
 
 title = ("A Split-Aware Evaluation of Lionfish-Tuned Hybrid Deep Learning for "
-          "Internet of Health Things Intrusion Detection in the Quantum Computing Era")
+          "Internet of Medical Things Intrusion Detection in the Quantum Computing Era")
 doc.add_paragraph(title, style="MDPI_1.2_title")
 
 doc.add_paragraph(
-    "Hiba A. Tarish ¹², Rosilah Hassan ¹, Khairul Akram Zainol Ariffin ¹, "
-    "Mustafa Musa Jaber ³*",
+    "Hiba A. Tarish ¹², Rosilah Hassan ¹, Mustafa Musa Jaber ³*",
     style="MDPI_1.3_authornames",
 )
 
@@ -543,22 +542,20 @@ for line in [
 # ABSTRACT
 # =======================================================================
 abstract = (
-    "Background: many IoHT intrusion-detection studies report near-perfect accuracy without rigorous "
+    "Background: many IoMT intrusion-detection studies report near-perfect accuracy without rigorous "
     "evaluation. This is an evaluation-methodology study: we test whether a proposed architecture "
     "survives scrutiny, rather than claim it is superior. Methods: we evaluate a Lionfish-tuned "
     "hybrid CNN-LSTM-GRU-Attention network under a split-before-fit protocol across three benchmarks "
     "(ECU-IoHT, WUSTL-EHMS-2020, DSICU), checked against classical baselines, an architecture "
     "ablation, a random-search optimizer control, a paired significance test on matched "
     "cross-validation folds, repeated seeds, and budget-matched alternative splits with "
-    "identifier-like fields excluded. Results: the hybrid model reached 98.27% accuracy (F1 = 0.989) "
-    "on ECU-IoHT, 100.00% on DSICU, and 93.73% (F1 = 0.692) on WUSTL-EHMS-2020 (minority class, "
-    "12.5%). Classical baselines matched or significantly exceeded it on two of three benchmarks "
-    "(random forest 99.17% on ECU-IoHT; gradient boosting 97.26%, F1 = 0.881, on WUSTL-EHMS-2020; "
-    "paired t-test p < 0.005 on matched folds), and Lionfish did not outperform random search at a "
-    "matched budget. Excluding identifier-like fields reduced WUSTL-EHMS-2020 to 92.87% (F1 = 0.614); "
-    "under alternative splits, ECU-IoHT accuracy fell to 85.8% and WUSTL-EHMS-2020 recall fell to "
-    "0.385. DSICU's perfect separability survived every check applied, but given its restricted-"
-    "access status we report it as an unresolved artifact, not a validated result. Conclusion: a "
+    "identifier-like fields excluded. Results: the hybrid model reached high accuracy on all three "
+    "benchmarks, but classical baselines matched or significantly exceeded it on two of three "
+    "(paired t-test p < 0.005 on matched folds), and Lionfish did not outperform random search at a "
+    "matched budget. Removing identifier-like fields and moving to alternative, harder splits both "
+    "reduced performance materially, most notably a substantial recall drop on WUSTL-EHMS-2020. "
+    "DSICU's perfect separability survived every check applied, but given its restricted-access "
+    "status we report it as an unresolved artifact, not a validated result. Conclusion: a "
     "split-before-fit protocol alone does not establish deployability; matched baselines, ablations, "
     "significance testing, and alternative splits together distinguish real generalization from "
     "artifacts, and on two of three benchmarks favor simpler models over the proposed architecture."
@@ -569,7 +566,7 @@ kw = doc.add_paragraph(style="MDPI_1.8_keywords")
 r = kw.add_run("Keywords: ")
 r.bold = True
 kw.add_run(
-    "Internet of Health Things; intrusion detection; hybrid deep learning; Lionfish optimization; "
+    "Internet of Medical Things; intrusion detection; hybrid deep learning; Lionfish optimization; "
     "attention mechanism; split-before-fit evaluation; class imbalance; cybersecurity"
 )
 
@@ -601,7 +598,7 @@ for idx in range(6, 16):
 
 add_para(
     f"Distributed denial-of-service attacks in particular remain among the most "
-    f"disruptive threats to IoT and IoHT networks, and have been the subject of extensive "
+    f"disruptive threats to IoT and IoMT networks, and have been the subject of extensive "
     f"review and detection work {cite('orig9', 'orig10')}. Beyond DDoS, general healthcare "
     f"intrusion detection has been surveyed broadly {cite('orig11')}, and AI-based IoMT "
     f"security specifically has been the subject of comprehensive review "
@@ -693,7 +690,7 @@ for idx in [58, 59]:
 add_heading("3. Materials and Methods", level=1)
 add_para(
     "This study designs, tunes, and evaluates a hybrid deep-learning intrusion detection framework "
-    "for IoHT and telemetry-enabled healthcare data. Every stage — feature selection, scaling, "
+    "for IoMT and telemetry-enabled healthcare data. Every stage — feature selection, scaling, "
     "hyperparameter search, and model training — is fit exclusively on a training partition that is "
     "created before any of these steps run (split-before-fit), so that no information from the "
     "held-out test partition can influence model configuration or reported performance."
@@ -706,7 +703,7 @@ add_heading("3.1. Datasets", level=2)
 add_para(
     "Three benchmark datasets were used, two public and one restricted-access. ECU-IoHT is a raw "
     "packet-capture export of "
-    "111,207 records from an IoHT testbed, containing timestamp, protocol, packet length, and "
+    "111,207 records from an IoMT testbed, containing timestamp, protocol, packet length, and "
     "categorical Normal/Attack labels; source/destination IP addresses and free-text packet "
     "descriptions were excluded as features because they do not generalize across deployments. "
     "WUSTL-EHMS-2020 provides 16,318 pre-extracted network-flow and physiological features "
@@ -860,8 +857,8 @@ add_para(
     "random-search optimizer control (Section 4.9), the alternative-split sensitivity analysis "
     "(Section 4.10), the identifier-feature-removal check (Section 5.5), and the paired statistical "
     "significance test (Section 4.3), as well as parts of the preprocessing pipeline. All experimental "
-    "design decisions -- which comparisons to run, which datasets and splits to use, how to interpret "
-    "the results -- were made by the authors; the tool's role was implementation support under author "
+    "design decisions — which comparisons to run, which datasets and splits to use, how to interpret "
+    "the results — were made by the authors; the tool's role was implementation support under author "
     "direction. All code was reviewed by the authors, and all reported numbers were generated by "
     "running that code against the study's own data; no results, citations, or experimental findings "
     "were generated by the AI tool independently of the code it helped implement. The authors take "
@@ -902,7 +899,7 @@ add_heading("4.3. Statistical Significance Testing", level=2)
 if SIG is not None:
     add_para(
         "The cross-validation folds in Table 5 make a paired significance test possible: we refit "
-        "HistGradientBoostingClassifier -- the strongest classical baseline in Section 4.7 -- on the "
+        "HistGradientBoostingClassifier — the strongest classical baseline in Section 4.7 — on the "
         "identical five stratified folds (same split seed, same preprocessed features) used for the "
         "hybrid model's cross-validation stage, then compare the two sets of five paired fold "
         "accuracies with a paired t-test and a Wilcoxon signed-rank test. This directly tests whether "
@@ -935,10 +932,10 @@ if SIG is not None:
         f"returns p = {SIG['ECU-IoHT']['wilcoxon_p']:.4f}, the minimum achievable value at n = 5 "
         "paired folds; it is directionally consistent with the t-test but, with only five folds, "
         "underpowered on its own. On DSICU, both models score a tied 100% on every fold, so no test "
-        "applies (p = 1.0) -- consistent with the near-trivial separability discussed in Section 5.3, "
+        "applies (p = 1.0) — consistent with the near-trivial separability discussed in Section 5.3, "
         "not with a genuine advantage for either model. We emphasize a caveat: this test compares the "
         "cross-validation-stage hybrid model, trained under a 10-epoch/fold budget for tractability, "
-        "against gradient boosting on the same folds -- not the fully-trained final model reported in "
+        "against gradient boosting on the same folds — not the fully-trained final model reported in "
         "Table 6, which uses up to 80 epochs with early stopping and is evaluated once on the held-out "
         "test set rather than by cross-validation. The comparison therefore establishes that gradient "
         "boosting's edge over the hybrid architecture on ECU-IoHT and WUSTL-EHMS-2020 is statistically "
@@ -1009,7 +1006,7 @@ add_para(
     f"On WUSTL-EHMS-2020, a false-negative rate of "
     f"{EXTRA['WUSTL-EHMS-2020']['false_negative_rate']:.3f} means the model misses roughly "
     f"{EXTRA['WUSTL-EHMS-2020']['false_negative_rate']*100:.0f}% of genuine attacks at the default "
-    "threshold despite 93.46% overall accuracy — in a deployed IoHT monitoring context this would "
+    "threshold despite 93.46% overall accuracy — in a deployed IoMT monitoring context this would "
     "translate directly into undetected intrusion attempts, and accuracy alone would obscure this."
 )
 
@@ -1424,7 +1421,7 @@ add_para(
     "4.10's single alternative split per dataset). We did add a paired significance test (Section "
     "4.3) confirming that gradient boosting's edge over the hybrid model on ECU-IoHT and "
     "WUSTL-EHMS-2020 is not attributable to chance, but that test is limited to five matched "
-    "cross-validation folds per dataset -- it is not the same as testing across many independently "
+    "cross-validation folds per dataset — it is not the same as testing across many independently "
     "reseeded train/test splits, which remains left for future work. Sixth, the "
     "architecture ablation and random-search control both use a reduced-epoch quick-evaluation "
     "protocol (3 epochs) for practicality, and a single run per configuration; the noisy DSICU "
@@ -1453,7 +1450,7 @@ add_para(
 add_heading("6. Conclusions", level=1)
 add_para(
     "This study evaluated a Lionfish-tuned hybrid CNN-LSTM-GRU-Attention framework for intrusion "
-    "detection in IoHT and telemetry-enabled healthcare environments under a split-before-fit "
+    "detection in IoMT and telemetry-enabled healthcare environments under a split-before-fit "
     "protocol across three benchmarks, and then subjected that evaluation to same-split classical "
     "baselines, an exploratory architecture ablation, a single-run random-search control for the "
     "optimizer, repeated-seed evaluation at a matched training budget, capture-order/identifier-feature "
@@ -1481,7 +1478,7 @@ add_para(
     "no measurable advantage, because we believe the paper's most useful contribution is not a claim "
     "that this specific hybrid architecture is state of the art, but a demonstration of how much "
     "additional evidence — beyond a single split-before-fit accuracy number — is needed before an "
-    "IoHT intrusion-detection result should be trusted as reflecting genuine, deployable "
+    "IoMT intrusion-detection result should be trusted as reflecting genuine, deployable "
     "generalization."
 )
 
@@ -1530,8 +1527,8 @@ add_backmatter(
     "Author Contributions",
     "Conceptualization, H.A.T. and M.M.J.; methodology, H.A.T.; software, H.A.T.; validation, H.A.T. "
     "and M.M.J.; formal analysis, H.A.T.; investigation, H.A.T.; data curation, H.A.T.; writing—"
-    "original draft preparation, H.A.T.; writing—review and editing, R.H., K.A.Z.A. and M.M.J.; "
-    "visualization, H.A.T.; supervision, R.H. and K.A.Z.A.; project administration, M.M.J. All "
+    "original draft preparation, H.A.T.; writing—review and editing, R.H. and M.M.J.; "
+    "visualization, H.A.T.; supervision, R.H.; project administration, M.M.J. All "
     "authors have read and agreed to the published version of the manuscript."
 )
 add_backmatter("Funding", "This research received no external funding.")
@@ -1580,8 +1577,8 @@ for key, formatted in REFS:
 # ---------------------------------------------------------------------
 cp = doc.core_properties
 cp.title = title
-cp.author = "Hiba A. Tarish, Rosilah Hassan, Khairul Akram Zainol Ariffin, Mustafa Musa Jaber"
-cp.subject = "Internet of Health Things intrusion detection"
+cp.author = "Hiba A. Tarish, Rosilah Hassan, Mustafa Musa Jaber"
+cp.subject = "Internet of Medical Things intrusion detection"
 cp.last_modified_by = "Hiba A. Tarish"
 
 doc.save(OUT_PATH)
