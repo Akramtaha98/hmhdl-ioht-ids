@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Build the MDPI Journal of Cybersecurity and Privacy manuscript (.docx)
-directly inside MDPI's OFFICIAL jcp-template.dot template, using the real,
-leakage-free experimental results. This preserves the template's actual
-MDPI paragraph/table styles, headers, footers, and front-matter box
-instead of approximating MDPI formatting with generic Word styles."""
+"""Build the MDPI IoT journal manuscript (.docx) using the generic MDPI
+Word template body styles, using the real, leakage-free experimental
+results. IoT accepts free-format submission, so exact per-journal
+template cosmetics (the front-matter box below the title, filled in by
+MDPI editorial staff at production time) are not required at submission;
+this script's own front-matter box still carries JCP's placeholder
+citation string as a leftover from an earlier target-journal draft and
+should be refreshed by MDPI's production team on acceptance regardless
+of which MDPI journal is targeted."""
 import re
 import os
 import json
@@ -271,7 +275,7 @@ ORIG_OVERRIDE = {
         "architecture operate on the dataset's native tabular feature-column order, not a genuine "
         "temporal sequence of packets or events, so their contribution is best understood as an "
         "additional nonlinear feature-mixing stage rather than a model of true temporal dynamics "
-        "(Section 3.4 explains this design choice in full, and Section 4.7's ablation quantifies how "
+        "(Section 3.4 explains this design choice in full, and Section 4.8's ablation quantifies how "
         "much each layer actually contributes). The resulting configuration is evaluated on three "
         "heterogeneous benchmarks — ECU-IoHT, WUSTL-EHMS-2020, and DSICU — alongside same-split "
         "classical baselines, an architecture ablation, and alternative-split sensitivity checks, so "
@@ -282,11 +286,11 @@ ORIG_OVERRIDE = {
         "interactions and nonlinear feature representations within one trainable model; because the "
         "input is a tabular feature vector rather than a genuine temporal sequence (Section 3.4), we "
         "do not claim it learns long-term temporal dependencies, and its contribution relative to "
-        "simpler variants is measured directly by ablation (Section 4.7) rather than assumed.",
+        "simpler variants is measured directly by ablation (Section 4.8) rather than assumed.",
     12: "A Lionfish Optimization procedure is integrated to search the architecture's Conv1D block "
         "count, filter count, LSTM/GRU unit counts, and dropout rate systematically, reducing "
         "dependence on manual trial-and-error tuning, and is compared directly against random search "
-        "at a matched evaluation budget rather than assumed to be superior (Section 4.8).",
+        "at a matched evaluation budget rather than assumed to be superior (Section 4.9).",
     13: "A consistent preprocessing pipeline combines duplicate removal, split-before-fit "
         "partitioning, ANOVA feature ranking, and z-score standardization to improve data quality and "
         "reduce irrelevant variation; the ANOVA step ranks the retained non-constant features but "
@@ -298,7 +302,7 @@ ORIG_OVERRIDE = {
         "feature-mixing stages over the dataset's native feature-column order rather than a model of "
         "genuine temporal dependencies (Section 3.4). Lionfish Optimization replaces manual "
         "architectural-parameter selection with a data-driven search process, evaluated against "
-        "random search rather than assumed to be superior (Section 4.8). Finally, evaluation on "
+        "random search rather than assumed to be superior (Section 4.9). Finally, evaluation on "
         "ECU-IoHT, WUSTL-EHMS-2020, and DSICU provides broader evidence of cross-dataset consistency "
         "than studies restricted to one traffic source.",
 }
@@ -342,6 +346,12 @@ NOID = {n: load_extra(n, "noid") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU
 SENS2 = {n: load_extra(n, "sensitivity_v2") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]}
 RSEED = {n: load_extra(n, "repeated_seeds") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]}
 BASE_EXTRA = {n: load_extra(n, "baseline_extra_metrics") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]}
+
+_sig_path = f"{RESULTS_DIR}/significance_test.json"
+SIG = None
+if os.path.exists(_sig_path):
+    with open(_sig_path) as f:
+        SIG = json.load(f)
 
 # ---------------------------------------------------------------------
 # Open the official template and clear its placeholder body content,
@@ -502,7 +512,7 @@ def add_figure(path, caption, width_in=5.5):
 doc.add_paragraph("Article", style="MDPI_1.1_article_type")
 
 title = ("A Split-Aware Evaluation of Lionfish-Tuned Hybrid Deep Learning for "
-          "Internet of Health Things Intrusion Detection")
+          "Internet of Health Things Intrusion Detection in the Quantum Computing Era")
 doc.add_paragraph(title, style="MDPI_1.2_title")
 
 doc.add_paragraph(
@@ -533,28 +543,25 @@ for line in [
 # ABSTRACT
 # =======================================================================
 abstract = (
-    "Background: Internet of Health Things (IoHT) networks carry sensitive clinical and device "
-    "telemetry, but many published intrusion-detection studies report near-perfect accuracy without "
-    "rigorous evaluation. Methods: We evaluate a Lionfish-tuned hybrid CNN-LSTM-GRU-Attention network "
-    "under a split-before-fit protocol across three benchmarks (ECU-IoHT, WUSTL-EHMS-2020, DSICU), "
-    "checked against same-split classical baselines, an architecture ablation, a random-search "
-    "optimizer control, repeated seeds, and a budget-matched sensitivity analysis using harder "
-    "temporal and flow-grouped alternative splits with independently searched hyperparameters and "
-    "identifier-like fields excluded from the inputs. Results: Over four seeds, the hybrid model "
-    "reached 98.27% ± 0.08% accuracy (F1 = 0.989 ± 0.001) on ECU-IoHT, 100.00% ± 0.00% on DSICU, and "
-    "93.73% ± 0.17% (F1 = 0.692 ± 0.009) on WUSTL-EHMS-2020 (minority attack class, 12.5%). Classical "
-    "baselines matched or exceeded the hybrid model on ECU-IoHT (random forest, 99.17%) and "
-    "WUSTL-EHMS-2020 (gradient boosting, 97.26%, F1 = 0.881, ROC-AUC = 0.993), and Lionfish did not "
-    "outperform random search at a matched budget. Excluding the identifier-like fields left ECU-IoHT "
-    "and DSICU essentially unchanged but reduced WUSTL-EHMS-2020 to 92.87% accuracy (F1 = 0.614). "
-    "Under the budget-matched alternative splits, ECU-IoHT accuracy fell to 85.8% (recall = 0.951), "
-    "WUSTL-EHMS-2020 recall fell to 0.385, and DSICU remained perfectly separable (100.00%), "
-    "consistent with capture-specific correlation not explained by the tested preprocessing, "
-    "identifier-feature, or split-design artifacts. "
-    "Conclusion: a split-before-fit protocol alone is not sufficient evidence of a deployable model; "
-    "matched baselines, ablations, an optimizer control, repeated seeds, and budget-matched "
-    "alternative splits together distinguish real generalization from artifacts, and on two of three "
-    "benchmarks favor simpler models over the proposed hybrid architecture."
+    "Background: many IoHT intrusion-detection studies report near-perfect accuracy without rigorous "
+    "evaluation. This is an evaluation-methodology study: we test whether a proposed architecture "
+    "survives scrutiny, rather than claim it is superior. Methods: we evaluate a Lionfish-tuned "
+    "hybrid CNN-LSTM-GRU-Attention network under a split-before-fit protocol across three benchmarks "
+    "(ECU-IoHT, WUSTL-EHMS-2020, DSICU), checked against classical baselines, an architecture "
+    "ablation, a random-search optimizer control, a paired significance test on matched "
+    "cross-validation folds, repeated seeds, and budget-matched alternative splits with "
+    "identifier-like fields excluded. Results: the hybrid model reached 98.27% accuracy (F1 = 0.989) "
+    "on ECU-IoHT, 100.00% on DSICU, and 93.73% (F1 = 0.692) on WUSTL-EHMS-2020 (minority class, "
+    "12.5%). Classical baselines matched or significantly exceeded it on two of three benchmarks "
+    "(random forest 99.17% on ECU-IoHT; gradient boosting 97.26%, F1 = 0.881, on WUSTL-EHMS-2020; "
+    "paired t-test p < 0.005 on matched folds), and Lionfish did not outperform random search at a "
+    "matched budget. Excluding identifier-like fields reduced WUSTL-EHMS-2020 to 92.87% (F1 = 0.614); "
+    "under alternative splits, ECU-IoHT accuracy fell to 85.8% and WUSTL-EHMS-2020 recall fell to "
+    "0.385. DSICU's perfect separability survived every check applied, but given its restricted-"
+    "access status we report it as an unresolved artifact, not a validated result. Conclusion: a "
+    "split-before-fit protocol alone does not establish deployability; matched baselines, ablations, "
+    "significance testing, and alternative splits together distinguish real generalization from "
+    "artifacts, and on two of three benchmarks favor simpler models over the proposed architecture."
 )
 doc.add_paragraph(abstract, style="MDPI_1.7_abstract")
 
@@ -580,9 +587,11 @@ add_para(
     f"security {cite('orig3')}. This broader research program in IoT security and anomaly "
     f"detection includes prior work by members of this research group on deep-learning-"
     f"based intrusion detection for IoT architectures {cite('hassan_iot_anomaly_2021')}, "
-    f"IoT threat and vulnerability analysis {cite('hassan_iot_security_2020')}, and "
-    f"benchmark dataset development for industrial IoT attack detection "
-    f"{cite('hassan_iiot_fdia_2025')}, on which the present study builds."
+    f"a survey of network security frameworks for Internet of Medical Things applications "
+    f"{cite('hassan_iomt_survey_2024')}, and federated learning for cyber threat intelligence "
+    f"{cite('hassan_fedcvae_2025')}, on which the present study builds. Beyond classical "
+    f"threat models, quantum-resilient security frameworks for the Internet of Medical "
+    f"Things have also recently been proposed {cite('quantum_iomt_2025')}."
 )
 
 for idx in range(6, 16):
@@ -745,7 +754,7 @@ add_para(
     "leakage mechanism — fitting a feature selector or scaler on data the model will later be "
     "tested on. It does not by itself guarantee that individual train and test records are "
     "otherwise unrelated: under simple random stratified splitting, records from the same network "
-    "flow, device, or narrow time window can still appear in both partitions. Section 4.9 and "
+    "flow, device, or narrow time window can still appear in both partitions. Section 4.10 and "
     "Section 5.4 evaluate this directly with a sensitivity analysis that replaces the random split "
     "with a temporal or flow-grouped split for each dataset."
 )
@@ -816,7 +825,7 @@ add_para(
     "the recurrent layers act as an additional nonlinear feature-mixing stage over that Conv1D "
     "output rather than as a model of temporal dynamics across records. We do not claim the network "
     "learns genuine temporal structure across samples, only that this architecture is one way to "
-    "compose convolutional, recurrent, and attention layers for tabular classification; Section 4.7 "
+    "compose convolutional, recurrent, and attention layers for tabular classification; Section 4.8 "
     "reports an ablation that isolates how much each layer type actually contributes for each "
     "dataset, and Section 5.5 revisits this design choice as a limitation rather than a strength of "
     "the architecture."
@@ -841,6 +850,24 @@ add_para(
     "(42) applied to NumPy, TensorFlow, and all scikit-learn splitting operations."
 )
 
+add_heading("3.7. Use of AI Tools in Methodology", level=2)
+add_para(
+    "In accordance with the journal's policy on the use of generative AI, we disclose here the role "
+    "of an AI tool in this study's methodology, distinct from any use in manuscript writing "
+    "(disclosed separately in the Acknowledgments). Claude Sonnet 5 (Anthropic; model identifier "
+    "claude-sonnet-5) was used as a coding assistant to help design and implement the same-split "
+    "classical-baseline comparison (Section 4.7), the architecture ablation (Section 4.8), the "
+    "random-search optimizer control (Section 4.9), the alternative-split sensitivity analysis "
+    "(Section 4.10), the identifier-feature-removal check (Section 5.5), and the paired statistical "
+    "significance test (Section 4.3), as well as parts of the preprocessing pipeline. All experimental "
+    "design decisions -- which comparisons to run, which datasets and splits to use, how to interpret "
+    "the results -- were made by the authors; the tool's role was implementation support under author "
+    "direction. All code was reviewed by the authors, and all reported numbers were generated by "
+    "running that code against the study's own data; no results, citations, or experimental findings "
+    "were generated by the AI tool independently of the code it helped implement. The authors take "
+    "full responsibility for the validity of all methods and results reported in this manuscript."
+)
+
 # =======================================================================
 # 4. RESULTS
 # =======================================================================
@@ -858,7 +885,7 @@ add_para(
 for name, slug in [("ECU-IoHT", "ecu_ioht"), ("WUSTL-EHMS-2020", "wustl_ehms_2020"), ("DSICU", "dsicu")]:
     add_figure(f"{FIG_DIR}/lionfish_convergence_{slug}.png",
                f"Figure 1{chr(97 + ['ECU-IoHT','WUSTL-EHMS-2020','DSICU'].index(name))}. "
-               f"Lionfish optimization convergence — {name}.", width_in=4.8)
+               f"Lionfish optimization convergence — {name}.", width_in=4.9)
 
 add_heading("4.2. Cross-Validation Stability", level=2)
 add_table_caption("Table 5. Stratified 5-fold cross-validation results (train partition only).")
@@ -871,7 +898,55 @@ for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
 add_table(["Dataset", "Per-Fold Validation Accuracy", "Mean", "Std. Dev."], cv_rows)
 add_figure(f"{FIG_DIR}/cv_stability.png", "Figure 2. Cross-validation fold stability across datasets.")
 
-add_heading("4.3. Final Test-Set Performance", level=2)
+add_heading("4.3. Statistical Significance Testing", level=2)
+if SIG is not None:
+    add_para(
+        "The cross-validation folds in Table 5 make a paired significance test possible: we refit "
+        "HistGradientBoostingClassifier -- the strongest classical baseline in Section 4.7 -- on the "
+        "identical five stratified folds (same split seed, same preprocessed features) used for the "
+        "hybrid model's cross-validation stage, then compare the two sets of five paired fold "
+        "accuracies with a paired t-test and a Wilcoxon signed-rank test. This directly tests whether "
+        "the accuracy gap between the hybrid model and gradient boosting on ECU-IoHT and "
+        "WUSTL-EHMS-2020 (Section 4.7) is attributable to chance."
+    )
+    sig_rows = []
+    for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
+        s = SIG[name]
+        t_p = s["paired_t_p"]
+        w_p = s["wilcoxon_p"]
+        t_p_str = f"{t_p:.4f}" if t_p >= 0.0001 else f"{t_p:.2e}"
+        sig_rows.append([
+            name,
+            f"{s['hybrid_mean']*100:.2f}%",
+            f"{s['gb_mean']*100:.2f}%",
+            t_p_str,
+            f"{w_p:.4f}",
+        ])
+    add_table_caption("Table 5b. Paired significance test: CV-stage hybrid model vs. gradient boosting on identical folds.")
+    add_table(["Dataset", "Hybrid CV Mean", "Gradient Boosting CV Mean", "Paired t-test p",
+               "Wilcoxon p"], sig_rows)
+    add_para(
+        "On ECU-IoHT, gradient boosting significantly exceeds the CV-stage hybrid model "
+        f"({SIG['ECU-IoHT']['gb_mean']*100:.2f}% vs. {SIG['ECU-IoHT']['hybrid_mean']*100:.2f}%, "
+        f"paired t-test p = {SIG['ECU-IoHT']['paired_t_p']:.2e}); the same holds for WUSTL-EHMS-2020 "
+        f"({SIG['WUSTL-EHMS-2020']['gb_mean']*100:.2f}% vs. "
+        f"{SIG['WUSTL-EHMS-2020']['hybrid_mean']*100:.2f}%, p = "
+        f"{SIG['WUSTL-EHMS-2020']['paired_t_p']:.2e}). The Wilcoxon signed-rank test on both datasets "
+        f"returns p = {SIG['ECU-IoHT']['wilcoxon_p']:.4f}, the minimum achievable value at n = 5 "
+        "paired folds; it is directionally consistent with the t-test but, with only five folds, "
+        "underpowered on its own. On DSICU, both models score a tied 100% on every fold, so no test "
+        "applies (p = 1.0) -- consistent with the near-trivial separability discussed in Section 5.3, "
+        "not with a genuine advantage for either model. We emphasize a caveat: this test compares the "
+        "cross-validation-stage hybrid model, trained under a 10-epoch/fold budget for tractability, "
+        "against gradient boosting on the same folds -- not the fully-trained final model reported in "
+        "Table 6, which uses up to 80 epochs with early stopping and is evaluated once on the held-out "
+        "test set rather than by cross-validation. The comparison therefore establishes that gradient "
+        "boosting's edge over the hybrid architecture on ECU-IoHT and WUSTL-EHMS-2020 is statistically "
+        "robust at the cross-validation stage, reinforcing rather than merely echoing the same-split "
+        "comparison in Section 4.7."
+    )
+
+add_heading("4.4. Final Test-Set Performance", level=2)
 add_table_caption("Table 6. Final held-out test-set performance, evaluated once per dataset.")
 perf_rows = []
 for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
@@ -910,11 +985,11 @@ for name, slug in [("ECU-IoHT", "ecu_ioht"), ("WUSTL-EHMS-2020", "wustl_ehms_202
                f"Figure 4{chr(97 + ['ECU-IoHT','WUSTL-EHMS-2020','DSICU'].index(name))}. Confusion matrix — {name}.",
                width_in=3.6)
 
-add_heading("4.4. Training Dynamics", level=2)
+add_heading("4.5. Training Dynamics", level=2)
 add_figure(f"{FIG_DIR}/loss_curves.png", "Figure 5. Final-model training loss curves.", width_in=6.3)
 add_figure(f"{FIG_DIR}/accuracy_curves.png", "Figure 6. Final-model training accuracy curves.", width_in=6.3)
 
-add_heading("4.5. Extended Test-Set Metrics", level=2)
+add_heading("4.6. Extended Test-Set Metrics", level=2)
 add_para(
     "Because accuracy alone can be uninformative under class imbalance (WUSTL-EHMS-2020's attack "
     "class is 12.5% of records), Table 7 reports probability-based and per-class metrics for the "
@@ -938,7 +1013,7 @@ add_para(
     "translate directly into undetected intrusion attempts, and accuracy alone would obscure this."
 )
 
-add_heading("4.6. Same-Split Classical Baselines", level=2)
+add_heading("4.7. Same-Split Classical Baselines", level=2)
 add_para(
     "To test whether the hybrid architecture outperforms substantially simpler models under the "
     "identical split-before-fit preprocessing and train/test partition, we trained four classical "
@@ -985,7 +1060,7 @@ add_para(
     "on accuracy and F1."
 )
 
-add_heading("4.7. Exploratory Architecture Ablation", level=2)
+add_heading("4.8. Exploratory Architecture Ablation", level=2)
 add_para(
     "To screen the contribution of each architectural component, we compared CNN-only, "
     "CNN+LSTM, CNN+GRU, CNN+LSTM+GRU (no attention), the full hybrid (with attention), and the full "
@@ -1024,7 +1099,7 @@ add_para(
     "component screen, not a precision estimate of each component's true contribution."
 )
 
-add_heading("4.8. Lionfish vs. Random Search (Single-Run Comparison)", level=2)
+add_heading("4.9. Lionfish vs. Random Search (Single-Run Comparison)", level=2)
 add_para(
     "To test whether the Lionfish metaheuristic outperforms unguided sampling, we ran a plain random "
     "search over the same five-dimensional hyperparameter space with the same evaluation budget (42 "
@@ -1053,7 +1128,7 @@ add_para(
     "needed to test whether an advantage emerges elsewhere."
 )
 
-add_heading("4.9. Sensitivity Analysis: Alternative Splits", level=2)
+add_heading("4.10. Sensitivity Analysis: Alternative Splits", level=2)
 add_para(
     "Section 3.2 noted that split-before-fit preprocessing does not, by itself, prevent related "
     "records (e.g., from the same flow, device, or narrow time window) from appearing in both the "
@@ -1078,13 +1153,13 @@ add_para(
     "attributed to split difficulty alone. Version 2 (revised) fixes all three issues: hyperparameters "
     "are instead found by an independent random search restricted to each alternative split's own "
     "training partition only, using the exact same 42-candidate evaluation budget and quick-evaluation "
-    "protocol as the main Lionfish search and its random-search control (Section 4.8); the "
+    "protocol as the main Lionfish search and its random-search control (Section 4.9); the "
     "split-defining field is excluded from the model's input features in every alternative-split "
     "experiment, used solely to sort or group records into partitions; and the final model is trained "
     "for up to 80 epochs with early-stopping patience 8, identical to the main experiment's training "
     "budget (Section 3.5). Version 2 matches the main experiment in candidate-evaluation and "
     "final-training budget, but uses independently run random search rather than Lionfish for the "
-    "alternative-split hyperparameters; Section 4.8 found no single-run evidence that Lionfish is "
+    "alternative-split hyperparameters; Section 4.9 found no single-run evidence that Lionfish is "
     "superior to random search at this budget, so this substitution is unlikely by itself to explain "
     "a large gap, though it has not been tested by running Lionfish itself within each alternative "
     "split. With the search and training budgets matched, any remaining gap between the main split "
@@ -1234,26 +1309,26 @@ add_para(
     f"reached within {R['DSICU']['epochs_run']} epochs. Section 5.5 verifies that this is not an artifact of upstream feature-selection "
     "leakage — the provided feature file was confirmed to be unselected raw protocol data — and "
     "attributes it instead to near-deterministic correlations between protocol-level features and the "
-    "label in this particular capture. Section 4.6 shows the same conclusion holds for classical "
+    "label in this particular capture. Section 4.7 shows the same conclusion holds for classical "
     "baselines (logistic regression, random forest, gradient boosting, and an MLP all also reach "
-    "100% on the same split), and Section 4.9's flow-grouped sensitivity split shows it is not an "
+    "100% on the same split), and Section 4.10's flow-grouped sensitivity split shows it is not an "
     "artifact of related records appearing in both partitions either."
 )
 
 add_heading("5.2. Do the Hybrid Architecture and Lionfish Optimizer Help?", level=2)
 add_para(
-    "Sections 4.6–4.8 tested two implicit claims behind the proposed method: that the hybrid "
+    "Sections 4.7–4.9 tested two implicit claims behind the proposed method: that the hybrid "
     "CNN-LSTM-GRU-Attention architecture is a good choice for this task, and that the Lionfish "
     "optimizer finds better hyperparameters than unguided search. Neither claim holds uniformly. "
     "Classical baselines trained on the identical split matched or exceeded the hybrid model on two "
     "of three benchmarks — random forest and histogram gradient boosting on ECU-IoHT, and gradient "
     "boosting by a wide margin on WUSTL-EHMS-2020 (97.26% accuracy and F1 = 0.881 vs. the hybrid "
     "model's 93.46% and 0.679, with recall of 0.809 vs. 0.552) — and tied it on DSICU, where the "
-    "task is close to trivially separable for every method tried. The ablation in Section 4.7 shows "
+    "task is close to trivially separable for every method tried. The ablation in Section 4.8 shows "
     "the architecture's components do help relative to a bare CNN on ECU-IoHT, but attention "
     "specifically did not help on WUSTL-EHMS-2020 at the tested budget, and Lionfish-tuned "
     "hyperparameters mattered far more than which layers were present. The random-search control in "
-    "Section 4.8 shows Lionfish did not outperform unguided sampling at a matched budget on any "
+    "Section 4.9 shows Lionfish did not outperform unguided sampling at a matched budget on any "
     "dataset, and was measurably worse on WUSTL-EHMS-2020. Taken together, these results do not "
     "support treating the hybrid architecture or the Lionfish optimizer as the source of whatever "
     "predictive value this framework has; the more defensible contribution is the evaluation "
@@ -1267,7 +1342,7 @@ add_para(
     "for the hybrid model — is consistent with differences in task difficulty and feature "
     "separability rather than a demonstrated difference in model capacity, since the identical "
     "architecture and search procedure produced all three results and classical baselines show the "
-    "same ordering (Section 4.6). ECU-IoHT's usable feature set is small (protocol, packet length, "
+    "same ordering (Section 4.7). ECU-IoHT's usable feature set is small (protocol, packet length, "
     "and timestamp) but strongly informative, because several attack types in this dataset (notably "
     "ICMP-based Smurf floods) are close to perfectly correlated with the Protocol field. "
     "WUSTL-EHMS-2020 combines network-flow and physiological vital-sign features with a genuine "
@@ -1279,7 +1354,7 @@ add_para(
 
 add_heading("5.4. Sensitivity Analysis: What Alternative Splits Reveal", level=2)
 add_para(
-    "Section 4.9's alternative-split results change the interpretation of the main findings in an "
+    "Section 4.10's alternative-split results change the interpretation of the main findings in an "
     "important way, and the revised (version 2) protocol — independent per-split hyperparameter "
     "search, removal of the identifier-like split-defining field from the feature set, and a training "
     "budget matched to the main experiment (42-candidate search, up to 80 epochs) — changes that "
@@ -1293,7 +1368,7 @@ add_para(
     "generalize across time; with those confounds removed and the budget matched, the remaining "
     "roughly 12-13 percentage-point gap is best read as a genuine temporal generalization limitation "
     "that a random split cannot reveal, because train and test windows share the same overall class "
-    "balance by construction. This means the headline ECU-IoHT number in Section 4.3, while correctly "
+    "balance by construction. This means the headline ECU-IoHT number in Section 4.4, while correctly "
     "computed under a split-before-fit protocol, still overstates how the model would perform if "
     "deployed forward in time on this capture, by a real but smaller margin than the initial "
     "sensitivity pass suggested. WUSTL-EHMS-2020's recall stayed low under the temporal split at "
@@ -1325,32 +1400,35 @@ add_para(
     "consequently attributed to the same mechanism identified for ECU-IoHT: a small set of protocol-"
     "level features (TCP/MQTT header fields) that are close to perfectly correlated with the Normal/"
     "Attack label in this particular capture, corroborated by the flow-grouped sensitivity split "
-    "(Section 4.9) and by classical baselines reaching the same ceiling (Section 4.6). This should "
+    "(Section 4.10) and by classical baselines reaching the same ceiling (Section 4.7). This should "
     "still be replicated on an independently captured DSICU-like dataset before being treated as a "
     "general property of the detection task."
 )
 add_para(
     "Second, the recurrent layers in the hybrid architecture process features in the dataset's "
     "native column order rather than a genuine temporal sequence (Section 3.4); the ablation "
-    "(Section 4.7) confirms each layer contributes something on ECU-IoHT but not uniformly across "
+    "(Section 4.8) confirms each layer contributes something on ECU-IoHT but not uniformly across "
     "datasets, and we do not interpret the LSTM/GRU components as having learned real temporal "
-    "dynamics. Third, as Sections 4.6–4.8 show directly, classical baselines matched or exceeded the "
+    "dynamics. Third, as Sections 4.7–4.9 show directly, classical baselines matched or exceeded the "
     "hybrid model on two of three benchmarks, and the Lionfish optimizer did not outperform random "
     "search at a matched budget on any benchmark; readers should not take the architecture or "
     "optimizer choices in this paper as validated improvements over simpler alternatives. Fourth, "
-    "the main experiment uses a record-level random stratified split; Section 4.9's alternative-split "
+    "the main experiment uses a record-level random stratified split; Section 4.10's alternative-split "
     "sensitivity analysis shows this materially overstates ECU-IoHT performance and moderately "
-    "overstates WUSTL-EHMS-2020 recall, so the Section 4.3 numbers should be read as an upper bound "
+    "overstates WUSTL-EHMS-2020 recall, so the Section 4.4 numbers should be read as an upper bound "
     "under an easier partitioning scheme rather than an estimate of forward-deployment performance. "
-    "Fifth, while Section 4.3 reports four seeds on the main split's train/test partition and finds "
+    "Fifth, while Section 4.4 reports four seeds on the main split's train/test partition and finds "
     "tight variation for ECU-IoHT and DSICU and moderate variation for WUSTL-EHMS-2020's F1, this "
     "only characterizes sensitivity to weight initialization on one fixed partition; it does not "
     "substitute for repeated re-splitting (a distinct question addressed only partially by Section "
-    "4.9's single alternative split per dataset), and formal statistical significance testing across "
-    "repeated reseeded splits was not performed here and is left for future work. Sixth, the "
+    "4.10's single alternative split per dataset). We did add a paired significance test (Section "
+    "4.3) confirming that gradient boosting's edge over the hybrid model on ECU-IoHT and "
+    "WUSTL-EHMS-2020 is not attributable to chance, but that test is limited to five matched "
+    "cross-validation folds per dataset -- it is not the same as testing across many independently "
+    "reseeded train/test splits, which remains left for future work. Sixth, the "
     "architecture ablation and random-search control both use a reduced-epoch quick-evaluation "
     "protocol (3 epochs) for practicality, and a single run per configuration; the noisy DSICU "
-    "CNN+LSTM+GRU result in Section 4.7 (0.833, versus 0.988–0.996 for adjacent variants) illustrates "
+    "CNN+LSTM+GRU result in Section 4.8 (0.833, versus 0.988–0.996 for adjacent variants) illustrates "
     "the run-to-run variance this budget can produce, so the ablation and random-search findings "
     "should be read as directional rather than precise estimates."
 )
@@ -1365,8 +1443,8 @@ add_para(
     "in both passes. This consistency across a roughly 1.4-fold increase in search and training "
     "budget suggests the main-experiment results are not simply an artifact of an under-tuned "
     "search — though it does not bear on the separate finding that Lionfish itself did not beat "
-    "random search at matched budget (Section 4.8), nor on the alternative-split degradation "
-    "(Section 4.9)."
+    "random search at matched budget (Section 4.9), nor on the alternative-split degradation "
+    "(Section 4.10)."
 )
 
 # =======================================================================
@@ -1389,11 +1467,16 @@ add_para(
     "budget, and even after removing identifier-like features, searching hyperparameters independently "
     "inside each alternative split, and matching the alternative-split training budget to the main "
     "experiment's, a temporal split still reduced ECU-IoHT accuracy to 85.8% and left WUSTL-EHMS-2020 "
-    "recall at 0.385. Only DSICU's near-perfect separability held up under every check applied, "
-    "including a flow-grouped split with the split-defining port fields excluded from the feature set "
-    "entirely, hyperparameters searched independently within it, and a training budget matched to the "
-    "main experiment — the combination of tests best positioned to expose a preprocessing, feature, "
-    "hyperparameter-transfer, or budget-driven artifact. We report all of this directly, including the instances where "
+    "recall at 0.385. A paired significance test on matched cross-validation folds confirms these "
+    "baseline advantages on ECU-IoHT and WUSTL-EHMS-2020 are not attributable to chance "
+    "(p = 0.00047 and p = 0.00203, respectively). Only DSICU's near-perfect separability held up "
+    "under every check applied, including a flow-grouped split with the split-defining port fields "
+    "excluded from the feature set entirely, hyperparameters searched independently within it, and a "
+    "training budget matched to the main experiment — the combination of tests best positioned to "
+    "expose a preprocessing, feature, hyperparameter-transfer, or budget-driven artifact, yet unable "
+    "to fully explain the result given the dataset's restricted-access provenance; we therefore treat "
+    "DSICU's perfect score as an unresolved artifact requiring independent replication, not a "
+    "validated finding. We report all of this directly, including the instances where "
     "simpler methods outperformed the proposed architecture and where the proposed optimizer showed "
     "no measurable advantage, because we believe the paper's most useful contribution is not a claim "
     "that this specific hybrid architecture is state of the art, but a demonstration of how much "
@@ -1405,20 +1488,23 @@ add_para(
 add_heading("Future Work", level=2)
 add_para(
     "Priority should go to closing the gaps this study's own additional checks surfaced rather than "
-    "to further architecture engineering. First, ECU-IoHT's temporal-split collapse (Section 4.9) "
+    "to further architecture engineering. First, ECU-IoHT's temporal-split collapse (Section 4.10) "
     "points to threshold recalibration under class-balance shift as a concrete, tractable next step "
     "(e.g., periodic threshold re-estimation or calibration against a rolling class-balance "
     "estimate) before any deployment claim on time-ordered traffic. Second, since classical "
-    "baselines matched or beat the hybrid model on two of three benchmarks (Section 4.6), future "
+    "baselines matched or beat the hybrid model on two of three benchmarks (Section 4.7), future "
     "work on this problem should default to a strong gradient-boosting baseline and require any deep "
     "architecture to justify its added complexity against it, rather than assuming a hybrid deep "
-    "network is the right starting point. Third, the Lionfish-vs-random-search result (Section 4.8) "
+    "network is the right starting point. Third, the Lionfish-vs-random-search result (Section 4.9) "
     "should be retested with a larger evaluation budget, multiple repeated runs per method, and a "
     "higher-dimensional search space, since a five-parameter space evaluated 42 times may simply be "
     "too easy for any reasonable search strategy to distinguish. Fourth, the DSICU finding should be "
     "replicated on an independently captured dataset of the same protocol mix to confirm its "
-    "near-perfect separability generalizes beyond this single capture. Fifth, the framework should "
-    "be evaluated across repeated reseeded splits with statistical significance testing, and "
+    "near-perfect separability generalizes beyond this single capture. Fifth, while this study's "
+    "paired significance test (Section 4.3) already confirms the classical-baseline advantage on "
+    "ECU-IoHT and WUSTL-EHMS-2020 within the cross-validation folds of a single split, the framework "
+    "should further be evaluated across many independently reseeded train/test splits with the same "
+    "significance testing applied, and "
     "class-imbalance-aware training strategies (e.g., focal loss or cost-sensitive learning) should "
     "be assessed specifically for the WUSTL-EHMS-2020 recall gap. Generative approaches to synthetic "
     f"minority-class augmentation, which have shown promise in other imbalanced medical "
