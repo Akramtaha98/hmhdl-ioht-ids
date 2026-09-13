@@ -1,0 +1,40 @@
+{
+  "dataset": "ECU-IoHT",
+  "experiment": "true_sliding_window_sequences_v2_time_dropped_fair_hparams",
+  "window_length": 10,
+  "n_train_windows": 77835,
+  "n_test_windows": 33354,
+  "architecture": {
+    "n_conv_blocks": 2,
+    "conv_filters": 51,
+    "lstm_units": 17,
+    "gru_units": 38,
+    "dropout_rate": 0.464693695792631
+  },
+  "epochs_run": 20,
+  "train_time_sec": 278.29496812820435,
+  "accuracy": 0.6996462193440067,
+  "balanced_accuracy": 0.6560720026693458,
+  "precision": 0.6613378358959621,
+  "recall": 0.9688947368421053,
+  "f1": 0.7861047057818772,
+  "roc_auc": 0.9618735379098436,
+  "pr_auc": 0.980762787603664,
+  "confusion_matrix": [
+    [
+      4927,
+      9427
+    ],
+    [
+      591,
+      18409
+    ]
+  ],
+  "fair_comparison_baseline_sensitivity_v2": {
+    "description": "flat feature-axis-as-sequence model, SAME temporal split, SAME independently-searched hyperparameters, Time also dropped",
+    "accuracy": 0.8578964721397956,
+    "f1": 0.8840292556444314,
+    "recall": 0.9506023462570361,
+    "precision": 0.8261704462326261
+  }
+}

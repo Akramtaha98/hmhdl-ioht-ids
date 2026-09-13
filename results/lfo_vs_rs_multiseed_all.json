@@ -1,0 +1,58 @@
+{
+  "ECU-IoHT": {
+    "lfo_values": [
+      0.9242083430290222,
+      0.9283190965652466,
+      0.9303744435310364
+    ],
+    "rs_values": [
+      0.9317875504493713,
+      0.9299890995025635,
+      0.9318517446517944
+    ],
+    "lfo_mean": 0.9276339610417684,
+    "lfo_std": 0.0025634946023457405,
+    "rs_mean": 0.9312094648679098,
+    "rs_std": 0.0008633264900406028,
+    "mean_diff_lfo_minus_rs": -0.0035755038261413574,
+    "paired_t_stat": -1.785408959180874,
+    "paired_t_p": 0.21611761625148734,
+    "wilcoxon_stat": 0.0,
+    "wilcoxon_p": 0.25,
+    "n_seeds": 3,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "note": "n=3 seeds is a small-sample paired comparison; Wilcoxon has a p-value floor around ~0.25 at n=3 and cannot reach conventional significance regardless of effect size -- reported for transparency, not as a significance claim."
+  },
+  "WUSTL-EHMS-2020": {
+    "lfo_values": [
+      0.9242888689041138,
+      0.9225382804870605,
+      0.9234135746955872
+    ],
+    "rs_values": [
+      0.9221006631851196,
+      0.9229759573936462,
+      0.9229759573936462
+    ],
+    "lfo_mean": 0.9234135746955872,
+    "lfo_std": 0.0007146747285678182,
+    "rs_mean": 0.9226841926574707,
+    "rs_std": 0.0004126176469216526,
+    "mean_diff_lfo_minus_rs": 0.0007293820381164551,
+    "paired_t_stat": 0.9448725753245992,
+    "paired_t_p": 0.4444601378073395,
+    "wilcoxon_stat": 2.0,
+    "wilcoxon_p": 0.75,
+    "n_seeds": 3,
+    "seeds": [
+      42,
+      43,
+      44
+    ],
+    "note": "n=3 seeds is a small-sample paired comparison; Wilcoxon has a p-value floor around ~0.25 at n=3 and cannot reach conventional significance regardless of effect size -- reported for transparency, not as a significance claim."
+  }
+}
