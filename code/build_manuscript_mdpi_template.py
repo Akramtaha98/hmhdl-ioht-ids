@@ -229,12 +229,17 @@ ORIG_OVERRIDE = {
         "parallel neural networks and meta-classifiers simultaneously introduces substantial "
         "computational and memory overhead, increasing inference latency in ways that may hinder "
         "deployment on low-power edge medical devices [39].",
-    45: "On the NSL-KDD and WUSTL-EHMS-2020 datasets, Krishna Kumari et al.'s MREQGAN-DSA "
-        "architecture again achieved near-perfect detection, with average accuracy of 99.81% and "
-        "an inference time of 24.9 seconds on WUSTL-EHMS-2020. As elsewhere, the authors attribute "
-        "the framework's main bottleneck to the mathematical and structural complexity of its "
-        "quantum-inspired components, which increases resource consumption and leaves cross-domain "
-        "generalizability to decentralized, multi-center clinical deployments unproven [29].",
+    45: "Krishna Kumari et al. proposed MREQGAN-DSA, a hybrid quantum-driven and bio-inspired "
+        "intrusion detection framework combining quantum-inspired multi-relational graph-attention "
+        "feature representations with Duck Swarm Algorithm-based hyperparameter optimization, "
+        "targeting higher-level IoMT threats such as DoS, probing, and man-in-the-middle attacks. "
+        "Evaluated on NSL-KDD and WUSTL-EHMS-2020, the architecture achieved near-perfect detection, "
+        "with average accuracy of 99.81% on NSL-KDD and 99.77% on WUSTL-EHMS-2020, and an inference "
+        "time of 24.9 seconds on "
+        "WUSTL-EHMS-2020. The authors attribute the framework's main bottleneck to the mathematical "
+        "and structural complexity of its quantum-inspired components, which increases resource "
+        "consumption and leaves cross-domain generalizability to decentralized, multi-center "
+        "clinical deployments unproven [29].",
     47: "Balhareth et al. proposed ML-FSID-FIS, an interpretable security framework for IoMT "
         "networks that combines a three-way, multi-level feature-selection approach with a fuzzy "
         "inference system to model uncertainty in traffic flows and flag malicious activity. "
@@ -295,6 +300,28 @@ ORIG_OVERRIDE = {
         "partitioning, ANOVA feature ranking, and z-score standardization to improve data quality and "
         "reduce irrelevant variation; the ANOVA step ranks the retained non-constant features but "
         "does not discard any of them (Section 3.2).",
+    14: "A split-before-fit evaluation protocol is applied uniformly across three heterogeneous "
+        "IoMT benchmarks — ECU-IoHT, WUSTL-EHMS-2020, and DSICU — and used to test the proposed "
+        "architecture and optimizer against matched-split classical baselines (Section 4.7), a "
+        "matched-budget random-search optimizer control run as both a single-run and a three-seed "
+        "comparison (Section 4.9), a corrected resampled significance test across independently "
+        "reseeded splits (Section 4.13), and alternative (temporal or flow-grouped) splits with "
+        "identifier-like fields excluded and hyperparameters re-searched per split (Section 4.10). "
+        "On two of the three benchmarks, this protocol shows a substantially simpler classical model "
+        "outperforms the proposed hybrid architecture, and that the Lionfish optimizer does not "
+        "outperform unguided random search at a matched budget — a demonstration that a single "
+        "split-before-fit accuracy number is not, by itself, sufficient evidence of deployable "
+        "generalization, and that the evaluation protocol itself, rather than the architecture or "
+        "optimizer, is this study's principal contribution.",
+    15: "The remainder of the paper is organized as follows. Section 2 reviews related "
+        "intrusion-detection studies and identifies the unresolved gaps. Section 3 presents the "
+        "datasets, preprocessing stages, Lionfish Optimization procedure, and hybrid network "
+        "architecture. Section 4 reports the experimental findings, including matched classical "
+        "baselines, the architecture ablation, the random-search optimizer control, statistical "
+        "significance testing, the alternative-split sensitivity analysis, and follow-up "
+        "class-imbalance-mitigation, sliding-window-sequence, and reseeded-split significance "
+        "experiments. Section 5 discusses these findings and their limitations. Section 6 concludes "
+        "the paper and outlines directions for further research.",
     59: "The proposed framework addresses these gaps through a compact and integrated design. ANOVA "
         "feature ranking orders predictors by an F-test score without discarding any of them (Section "
         "3.2), while z-score standardization reduces scale-related bias. The CNN component captures "
@@ -349,6 +376,17 @@ BASE_EXTRA = {n: load_extra(n, "baseline_extra_metrics") for n in ["ECU-IoHT", "
 MULTISEED = {n: load_extra(n, "lfo_vs_rs_multiseed") for n in ["ECU-IoHT", "WUSTL-EHMS-2020"]}
 SLIDING_WINDOW_V2 = load_extra("ECU-IoHT", "sliding_window_v2")
 RECALL_FIX_V2 = load_extra("WUSTL-EHMS-2020", "recall_fix_v2")
+with open(f"{RESULTS_DIR}/DSICU_per_feature_auc.json") as f:
+    DSICU_AUC = json.load(f)
+with open(f"{RESULTS_DIR}/baselines_multiseed_all.json") as f:
+    MULTISEED_BASE = json.load(f)
+INFCOST = {n: load_extra(n, "inference_cost") for n in ["ECU-IoHT", "WUSTL-EHMS-2020"]}
+with open(f"{RESULTS_DIR}/per_attack_class_recall.json") as f:
+    PER_ATTACK = json.load(f)
+with open(f"{RESULTS_DIR}/wustl_pr_curve_ap.json") as f:
+    WUSTL_PR_AP = json.load(f)
+with open(f"{RESULTS_DIR}/reseeded_splits_nb_test.json") as f:
+    NB_TEST = json.load(f)
 
 _sig_path = f"{RESULTS_DIR}/significance_test.json"
 SIG = None
@@ -390,7 +428,7 @@ _last_was_heading = [False]
 
 
 def add_heading(text, level=1):
-    style = {1: "MDPI_2.1_heading1", 2: "MDPI_2.2_heading2", 3: "MDPI_2.3_heading3"}[level]
+    style = {1: "MDPI21heading1", 2: "MDPI22heading2", 3: "MDPI23heading3"}[level]
     p = doc.add_paragraph(text, style=style)
     _last_was_heading[0] = True
     return p
@@ -398,7 +436,7 @@ def add_heading(text, level=1):
 
 def add_para(text, italic=False, bold=False, align=None, size=None, style=None):
     if style is None:
-        style = "MDPI_3.2_text_no_indent" if _last_was_heading[0] else "MDPI_3.1_text"
+        style = "MDPI32textnoindent" if _last_was_heading[0] else "MDPI31text"
     _last_was_heading[0] = False
     p = doc.add_paragraph(style=style)
     r = p.add_run(text)
@@ -413,7 +451,7 @@ def add_para(text, italic=False, bold=False, align=None, size=None, style=None):
 
 def add_backmatter(label, text):
     _last_was_heading[0] = False
-    p = doc.add_paragraph(style="MDPI_6.2_back_matter")
+    p = doc.add_paragraph(style="MDPI62backmatter")
     r = p.add_run(f"{label}: ")
     r.bold = True
     p.add_run(text)
@@ -421,12 +459,12 @@ def add_backmatter(label, text):
 
 
 def add_table_caption(text):
-    p = doc.add_paragraph(text, style="MDPI_4.1_table_caption")
+    p = doc.add_paragraph(text, style="MDPI41tablecaption")
     return p
 
 
 def add_figure_caption(text):
-    p = doc.add_paragraph(text, style="MDPI_5.1_figure_caption")
+    p = doc.add_paragraph(text, style="MDPI51figurecaption")
     return p
 
 
@@ -463,7 +501,11 @@ def _set_table_three_line_borders(table, n_header_rows=1):
             tcPr.append(tcBorders)
 
 
-def add_table(headers, rows):
+def add_table(headers, rows, bold_cells=None):
+    """bold_cells: optional set of (row_index, col_index) 0-indexed into `rows`
+    (not counting the header row) whose text should render bold, for marking
+    the winning value in a comparison table."""
+    bold_cells = bold_cells or set()
     t = doc.add_table(rows=1, cols=len(headers))
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
     bidiVisual = OxmlElement("w:bidiVisual")
@@ -481,26 +523,28 @@ def add_table(headers, rows):
     for i, htext in enumerate(headers):
         hdr[i].text = ""
         p = hdr[i].paragraphs[0]
-        p.style = doc.styles["MDPI_4.2_table_body"]
+        p.style = doc.styles["MDPI42tablebody"]
         r = p.add_run(htext)
         r.bold = True
         r.font.size = Pt(8.5)
-    for row in rows:
+    for ridx, row in enumerate(rows):
         cells = t.add_row().cells
         for i, val in enumerate(row):
             cells[i].text = ""
             p = cells[i].paragraphs[0]
-            p.style = doc.styles["MDPI_4.2_table_body"]
+            p.style = doc.styles["MDPI42tablebody"]
             r = p.add_run(str(val))
             r.font.size = Pt(8.5)
+            if (ridx, i) in bold_cells:
+                r.bold = True
     _set_table_three_line_borders(t)
-    doc.add_paragraph(style="MDPI_3.1_text")
+    doc.add_paragraph(style="MDPI31text")
     _last_was_heading[0] = False
     return t
 
 
 def add_figure(path, caption, width_in=5.5):
-    p = doc.add_paragraph(style="MDPI_5.2_figure")
+    p = doc.add_paragraph(style="MDPI52figure")
     run = p.add_run()
     run.add_picture(path, width=Inches(width_in))
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -509,18 +553,57 @@ def add_figure(path, caption, width_in=5.5):
     _last_was_heading[0] = False
 
 
+_eq_counter = [0]
+
+
+def add_equation(formula, label=None):
+    """Numbered equation: formula text, right-tab-stopped equation number,
+    using the template's own MDPI39equation paragraph style (which defines
+    the tab stops for this layout) rather than a hand-built table."""
+    _eq_counter[0] += 1
+    n = _eq_counter[0]
+    p = doc.add_paragraph(style="MDPI39equation")
+    p.add_run(formula)
+    p.add_run("\t" + f"({n})")
+    _last_was_heading[0] = False
+    return n
+
+
+def add_algorithm_box(title, lines):
+    """A bordered one-cell table containing a numbered-pseudocode algorithm
+    block, styled to read as a self-contained 'Algorithm N' figure the way
+    MDPI articles typically present pseudocode (no native 'algorithm' style
+    ships in the template, so a bordered table stands in for one)."""
+    tbl = doc.add_table(rows=1, cols=1)
+    tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+    cell = tbl.rows[0].cells[0]
+    _set_table_three_line_borders(tbl, n_header_rows=0)
+    tblPr = tbl._tbl.tblPr
+    for el in tbl._tbl.findall(qn("w:tblBorders")):
+        for edge in el:
+            edge.set(qn("w:sz"), "4")
+    p0 = cell.paragraphs[0]
+    r0 = p0.add_run(title)
+    r0.bold = True
+    for line in lines:
+        p = cell.add_paragraph()
+        p.add_run(line)
+    _last_was_heading[0] = False
+    return tbl
+
+
 # =======================================================================
 # TITLE PAGE
 # =======================================================================
-doc.add_paragraph("Article", style="MDPI_1.1_article_type")
+doc.add_paragraph("Article", style="MDPI11articletype")
 
-title = ("A Split-Aware Evaluation of Lionfish-Tuned Hybrid Deep Learning for "
-          "Internet of Medical Things Intrusion Detection in the Quantum Computing Era")
-doc.add_paragraph(title, style="MDPI_1.2_title")
+title = ("Split-Aware Evaluation of Hybrid Deep Learning for IoMT Intrusion Detection: "
+          "Matched Baselines, Optimizer Controls, and Alternative Splits")
+doc.add_paragraph(title, style="MDPI12title")
 
 doc.add_paragraph(
     "Hiba A. Tarish ¹², Rosilah Hassan ¹, Mustafa Musa Jaber ³*",
-    style="MDPI_1.3_authornames",
+    style="MDPI13authornames",
 )
 
 # Front-matter Academic Editor / history / citation / copyright box, reused
@@ -539,46 +622,40 @@ for line in [
     "and Informatics, Baghdad, Iraq",
     "* Correspondence: mustafa.musa@iips.edu.iq",
 ]:
-    doc.add_paragraph(line, style="MDPI_1.6_affiliation")
+    doc.add_paragraph(line, style="MDPI16affiliation")
 
 # =======================================================================
 # ABSTRACT
 # =======================================================================
 abstract = (
     "Background: many IoMT intrusion-detection studies report near-perfect accuracy without rigorous "
-    "evaluation. This is an evaluation-methodology study: we test whether a proposed architecture "
-    "survives scrutiny, rather than claim it is superior. Methods: we evaluate a Lionfish-tuned "
-    "hybrid CNN-LSTM-GRU-Attention network under a split-before-fit protocol across three benchmarks "
-    "(ECU-IoHT, WUSTL-EHMS-2020, DSICU), checked against classical baselines, an architecture "
-    "ablation, a random-search optimizer control, a paired significance test on matched "
-    "cross-validation folds, repeated seeds, and budget-matched alternative splits with "
-    "identifier-like fields excluded. Results: the hybrid model reached high accuracy on all three "
-    "benchmarks, but classical baselines matched or significantly exceeded it on two of three "
-    "(paired t-test p < 0.005 on matched folds), and Lionfish did not outperform random search at a "
-    "matched budget. Removing identifier-like fields and moving to alternative, harder splits both "
-    "reduced performance materially, most notably a substantial recall drop on WUSTL-EHMS-2020. "
-    "DSICU's perfect separability survived every check applied, but given its restricted-access "
-    "status we report it as an unresolved artifact, not a validated result. A follow-up, budget-"
-    "matched, three-seed comparison over an expanded search space (adding learning rate) confirms "
-    "this: random search matched or slightly exceeded Lionfish on both benchmarks tested, with no "
-    "statistically significant advantage for either method. A class-weighted loss did recover a "
-    "genuine, non-cherry-picked improvement in WUSTL-EHMS-2020's minority-class recall (0.591 vs. "
-    "0.552 at a validation-selected threshold) without a compensating loss in precision, while a "
-    "true multi-packet sliding-window sequence representation for ECU-IoHT, tested under the same "
-    "fair, confound-matched protocol as the existing temporal-split baseline, underperformed the "
-    "simpler feature-axis representation. Conclusion: a "
-    "split-before-fit protocol alone does not establish deployability; matched baselines, ablations, "
-    "significance testing, and alternative splits together distinguish real generalization from "
-    "artifacts, and on two of three benchmarks favor simpler models over the proposed architecture."
+    "evaluation. This evaluation-methodology study tests whether a proposed architecture survives "
+    "scrutiny, rather than claiming superiority. Methods: we evaluate a Lionfish-tuned hybrid "
+    "CNN-LSTM-GRU-Attention network under a split-before-fit protocol on ECU-IoHT and "
+    "WUSTL-EHMS-2020, checked against multi-seed classical baselines, an architecture ablation, "
+    "single-run and three-seed random-search controls, a corrected resampled significance test "
+    "across reseeded splits, and budget-matched temporal splits with identifier-like fields excluded. "
+    "Results: classical baselines matched or exceeded the hybrid model on both benchmarks; the "
+    "corrected test confirmed this for WUSTL-EHMS-2020 but not yet for ECU-IoHT at the tested reseed "
+    "count, despite the baseline winning every reseed. Random search matched or exceeded Lionfish "
+    "across both a single-run and a three-seed follow-up. Removing identifier-like fields and moving "
+    "to a temporal split both reduced performance materially, notably a recall drop on "
+    "WUSTL-EHMS-2020 only partially recovered by a class-weighted loss. A restricted-access third "
+    "benchmark reached perfect, artifact-like separability under every check and is reported as a "
+    "cautionary case study, not a validated result. Conclusions: a split-before-fit protocol alone "
+    "does not establish deployability; matched baselines, ablations, significance testing, and "
+    "alternative splits together distinguish real generalization from artifacts, favoring simpler "
+    "models over the proposed architecture and optimizer."
 )
-doc.add_paragraph(abstract, style="MDPI_1.7_abstract")
+doc.add_paragraph(abstract, style="MDPI17abstract")
 
-kw = doc.add_paragraph(style="MDPI_1.8_keywords")
+kw = doc.add_paragraph(style="MDPI18keywords")
 r = kw.add_run("Keywords: ")
 r.bold = True
 kw.add_run(
-    "Internet of Medical Things; intrusion detection; hybrid deep learning; Lionfish optimization; "
-    "attention mechanism; split-before-fit evaluation; class imbalance; cybersecurity"
+    "Internet of Medical Things; IoMT security; intrusion detection; hybrid deep learning; Lionfish "
+    "optimization; attention mechanism; split-before-fit evaluation; class imbalance; negative "
+    "results; reproducibility; cybersecurity"
 )
 
 # =======================================================================
@@ -641,15 +718,14 @@ for idx in [19, 20, 21, 22]:
         add_para(renumber(t))
 
 add_para(
-    "The one directly relevant prior study on DSICU-style intrusion detection is Krishna Kumari et "
-    "al., discussed below alongside its evaluation on ECU-IoHT and WUSTL-EHMS-2020."
+    "No published intrusion-detection study evaluated on DSICU specifically was identified in our "
+    "search; Section 2.3 discusses the one closely related quantum-driven framework that shares one "
+    "benchmark (WUSTL-EHMS-2020) with the present study, but it was not evaluated on DSICU or "
+    "ECU-IoHT and is not cited as DSICU-related work here."
 )
-t = orig(24)
-if t:
-    add_para(renumber(t))
 
 add_heading("2.2. Related Work on ECU-IoHT Data", level=2)
-for idx in [27, 28, 29, 30, 31, 33, 35]:
+for idx in [27, 28, 29, 30, 31, 33]:
     t = orig(idx)
     if t:
         add_para(renumber(t))
@@ -672,7 +748,7 @@ rel_rows = [
     ["Karboub & Tabaa (2022)", "Dynamic ML-SGD Regression", "MIMIC-IV", "Outcome prediction (not comparable)", "98%", "Reduced precision for long-stay (LOS > 3 d) patients."],
     ["Hempel et al. (2023)", "LinR, SVM, RF, XGBoost", "MIMIC-IV", "Outcome prediction (not comparable)", "MAPE ≈ 33%", "Compressing time-series to mean values drops granularity."],
     ["Koumantakis et al. (2025)", "LSTM, RNN, GRU", "MIMIC-IV (meta-analysis)", "Outcome prediction (not comparable)", "92%", "Overall high risk of bias (meta-analysis)."],
-    ["Krishna Kumari et al. (2026)", "MREQGAN-DSA", "DSICU, WUSTL, ECU", "Intrusion detection", "99.77%", "High architectural/compute overhead from quantum components."],
+    ["Krishna Kumari et al. (2026)", "MREQGAN-DSA", "NSL-KDD, WUSTL-EHMS-2020", "Intrusion detection", "99.81% / 99.77%", "High architectural/compute overhead from quantum components; not evaluated on DSICU or ECU-IoHT despite some secondary summaries describing it as multi-dataset across those benchmarks."],
     ["Vijayakumar et al. (2023)", "DNN", "ECU-IoHT", "Intrusion detection", "99.85%", "Degrades on non-Gaussian/skewed raw features."],
     ["Areia et al. (2024)", "DT, RF, NB, LogR, SVM, DNN", "ECU-IoHT", "Intrusion detection", "RF/DT 99%", "Statistical instability across classifiers."],
     ["Algethami & Alshamrani (2024)", "HANN-BLSTM", "ECU-IoHT", "Intrusion detection", "99.85%", "Lower precision on Smurf-attack detection."],
@@ -712,12 +788,13 @@ add_heading("3.1. Datasets", level=2)
 # UNSELECTED raw protocol data, byte-identical to an earlier unselected
 # export; it had NOT undergone prior mutual-information-based selection.
 add_para(
-    "Three benchmark datasets were used, two public and one restricted-access. ECU-IoHT is a raw "
-    "packet-capture export of "
+    f"Three benchmark datasets were used, two public and one restricted-access. ECU-IoHT "
+    f"{cite('ecu_dataset')} is a raw packet-capture export of "
     "111,207 records from an IoMT testbed, containing timestamp, protocol, packet length, and "
     "categorical Normal/Attack labels; source/destination IP addresses and free-text packet "
     "descriptions were excluded as features because they do not generalize across deployments. "
-    "WUSTL-EHMS-2020 provides 16,318 pre-extracted network-flow and physiological features "
+    f"WUSTL-EHMS-2020 {cite('wustl_dataset')} provides 16,318 pre-extracted network-flow and "
+    "physiological features "
     "(37 columns) with a binary label; its attack class is a genuine minority (2,046 of 16,318 "
     "records, 12.5%). DSICU is an MQTT/TCP telemetry capture of 188,694 records with 17 raw "
     "protocol-level features and a binary label; its filename carries an “_mi” suffix suggesting "
@@ -732,7 +809,9 @@ add_para(
 add_table_caption(
     "Table 2. Dataset summary after split-before-fit preprocessing (70%/30% stratified split "
     "and train-only removal of zero-variance columns; no columns were dropped by the ANOVA "
-    "ranking step itself, see Section 3.2)."
+    "ranking step itself, see Section 3.2). ECU-IoHT's 13 retained features expand from its 3 "
+    "raw fields (timestamp, packet length, protocol) after one-hot encoding of the categorical "
+    "Protocol field."
 )
 ds_rows = [
     ["ECU-IoHT", "111,207", "13", "77,844 / 33,363", "Attack 78.9% / Normal 21.1%"],
@@ -776,16 +855,57 @@ add_para(
     f"hierarchical deep-learning hyperparameter search in other data-driven prediction domains "
     f"{cite('orig14', 'orig24')}. A "
     "population of 6 candidate configurations was initialized uniformly at random within the bounds "
-    "in Table 3. At each of 6 iterations, an environmental factor E, exploration age a, and "
-    "certainty term C were drawn, from which a disguise (exploration) term D, a vision-sharpness "
-    "(exploitation) term VS, and an intentional-movement magnitude M were computed; their product "
-    "with E gives an effective hunting factor Hu that scales each candidate's step toward a randomly "
-    "generated prey position in hyperparameter space. Each candidate was evaluated by building the "
-    "hybrid network with that configuration, training for 3 epochs on 80% of the training partition "
-    "(batch size 1024), and measuring accuracy on the remaining 20% (held out from the training "
-    "partition only, never touching the test partition); fitness was one minus this validation "
-    "accuracy. Personal-best and global-best positions were tracked and returned as the final "
-    "hyperparameters."
+    "in Table 3. At each of 6 iterations t = 1, …, 6, an environmental factor E ~ U(0.1, 1.0), "
+    "exploration age a ~ U(0, 1), and certainty term C ~ U(0.5, 1.5) are drawn, from which a decay "
+    "(exploration-to-exploitation) factor D, a vision-sharpness (velocity/speed) term VS, and an "
+    "intentional-movement magnitude M ~ U(0.2, 1.0) are computed:"
+)
+add_equation("D(t) = 1 − exp(−E · t)")
+add_equation("VS = exp(−a · C)")
+add_equation("H = D · VS · M")
+add_para(
+    "The compound hunting factor Hu then scales each candidate's step toward a randomly generated "
+    "prey position p in hyperparameter space, with a fixed step-size multiplier η = 0.5:"
+)
+add_equation("Hu = D · VS · M · H · E")
+add_equation("x_i(t+1) = clip( x_i(t) + Hu · η · ( p(t) − x_i(t) ),  lower_i, upper_i )")
+add_para(
+    "where x_i(t) is candidate i's position (the 5-dimensional hyperparameter vector) at iteration "
+    "t, p(t) is an independently resampled prey position drawn uniformly from the same bounds as "
+    "the initial population, and clip(·, lower_i, upper_i) projects each coordinate back into its "
+    "bound from Table 3 (rounding to the nearest integer for the four integer-valued "
+    "hyperparameters). Each candidate was evaluated by building the hybrid network with that "
+    "configuration, training for 3 epochs on 80% of the training partition (batch size 1024), and "
+    "measuring accuracy on the remaining 20% (held out from the training partition only, never "
+    "touching the test partition); fitness was one minus this validation accuracy (Equation (6)). "
+    "Personal-best and global-best positions were tracked across iterations and the global-best "
+    "position was returned as the final hyperparameter configuration. Algorithm 1 summarizes the "
+    "full procedure."
+)
+add_equation("fitness(x_i) = 1 − Accuracy_val( f_θ(x_i) )")
+add_algorithm_box(
+    "Algorithm 1. Lionfish Optimization for hyperparameter search.",
+    [
+        "Input: bounds {(lower_k, upper_k)} for k = 1..5 (Table 3); population size N = 6; "
+        "iterations T = 6; quick-eval epochs = 3; training data (X_opt, y_opt), validation data "
+        "(X_val, y_val)",
+        "Output: best hyperparameter configuration x*",
+        "1:  Initialize population {x_1, ..., x_N}, each x_i ~ U(lower, upper) elementwise",
+        "2:  For each x_i in population: evaluate fitness(x_i) via Equation (6); "
+        "set personal_best_i = x_i, personal_best_fit_i = fitness(x_i)",
+        "3:  global_best = argmin_i personal_best_fit_i",
+        "4:  For t = 1 to T:",
+        "5:      Sample E ~ U(0.1, 1.0), a ~ U(0, 1), C ~ U(0.5, 1.5), M ~ U(0.2, 1.0)",
+        "6:      Compute D(t), VS, H, Hu via Equations (1)-(4)",
+        "7:      Sample a new prey position p(t) ~ U(lower, upper) elementwise",
+        "8:      For each candidate x_i in population:",
+        "9:          x_i ← clip(x_i + Hu · η · (p(t) − x_i), lower, upper)   [Equation (5), η = 0.5]",
+        "10:         Evaluate fitness(x_i) via Equation (6)",
+        "11:         If fitness(x_i) < personal_best_fit_i: update personal_best_i, "
+        "personal_best_fit_i",
+        "12:     global_best = argmin over all personal_best_i of personal_best_fit_i",
+        "13: Return x* = global_best",
+    ],
 )
 add_table_caption("Table 3. Search space for the Lionfish Optimization Algorithm.")
 lf_rows = [
@@ -807,22 +927,47 @@ add_table(["Dataset", "Conv Blocks", "Filters", "LSTM Units", "GRU Units", "Drop
 
 add_heading("3.4. Hybrid CNN-LSTM-GRU-Attention Architecture", level=2)
 add_para(
-    "Using the optimized hyperparameters, each classifier is assembled as a single forward pipeline. "
-    "The standardized, feature-selected input passes through the optimized number of Conv1D blocks "
-    "(kernel size 3, same padding), each followed by a LeakyReLU activation (α = 0.3) and batch "
-    f"normalization, to extract local feature interactions, consistent with established convolutional "
-    f"feature-extraction principles {cite('orig17')} and their application to lightweight time-series "
-    f"processing {cite('orig22')}. The convolutional output feeds an LSTM "
+    "Using the optimized hyperparameters, each classifier is assembled as a single forward pipeline "
+    "(Figure 1). The standardized, feature-selected input passes through the optimized number of "
+    "Conv1D blocks (kernel size 3, same padding), each followed by a LeakyReLU activation (α = 0.3) "
+    f"and batch normalization, to extract local feature interactions, consistent with established "
+    f"convolutional feature-extraction principles {cite('orig17')} and their application to "
+    f"lightweight time-series processing {cite('orig22')}:"
+)
+add_figure(f"{FIG_DIR}/architecture_diagram.png",
+           "Figure 1. Hybrid CNN-LSTM-GRU-Attention architecture, with the output tensor shape "
+           "annotated at each stage.", width_in=3.3)
+add_equation("h = LeakyReLU_{0.3}( BatchNorm( W ∗ x + b ) )")
+add_para(
+    f"where ∗ denotes 1-D convolution, W and b are the layer's learned filter weights and bias, and "
+    f"LeakyReLU_0.3(z) = z for z ≥ 0 and 0.3z otherwise. The convolutional output feeds an LSTM "
     f"layer (return_sequences = True) for long-range temporal dependencies {cite('orig18')}, followed "
     f"by a GRU layer (return_sequences = True) for faster-adapting temporal dynamics, whose "
     f"trade-offs relative to LSTM are well documented in comparative sequence-learning reviews "
     f"{cite('orig23')}. A 4-head self-attention block "
-    f"then attends over the GRU output (query = key = value), with a residual connection and layer "
-    f"normalization, drawing on attention-driven representation learning for anomaly detection "
-    f"{cite('orig25')}. Global average pooling compresses the sequence to a fixed-length vector, a "
-    "dropout layer regularizes it at the optimized rate, and a single sigmoid unit produces the "
-    "binary Normal/Attack prediction. All models were compiled with the Adam optimizer and binary "
-    "cross-entropy loss."
+    f"then attends over the GRU output (query Q = key K = value V = the GRU output sequence), with "
+    f"a residual connection and layer normalization, drawing on attention-driven representation "
+    f"learning for anomaly detection {cite('orig25')}:"
+)
+add_equation("Attention(Q, K, V) = softmax( Q Kᵀ / √d_k ) V")
+add_para(
+    "where d_k is the per-head key dimension (d_k = max(4, gru_units / 4) in this architecture, so "
+    "that the 4 attention heads jointly span the full GRU output width), and the block output is "
+    "LayerNorm(Attention(Q,K,V) + V) (residual connection). Global average pooling compresses the "
+    "sequence to a fixed-length vector, a dropout layer regularizes it at the optimized rate, and a "
+    "single sigmoid unit produces the binary Normal/Attack prediction. All models were compiled with "
+    "the Adam optimizer, minimizing binary cross-entropy loss (Equation (9)) for the main "
+    "experiment, or one of two class-imbalance-aware alternatives evaluated in Section 4.11: "
+    "class-weighted binary cross-entropy (Equation (10)) or focal loss (Equation (11), γ = 2.0, "
+    "α = 0.25)."
+)
+add_equation("L_BCE = −[ y·log(p) + (1−y)·log(1−p) ]")
+add_equation("L_wBCE = −[ w₁·y·log(p) + w₀·(1−y)·log(1−p) ],  w₁ = n₀/n₁, w₀ = 1")
+add_equation("L_focal = −α_t·(1−p_t)^γ·log(p_t),  p_t = p if y=1 else 1−p,  α_t = α if y=1 else 1−α")
+add_para(
+    "where y is the true binary label, p is the model's predicted probability of the Attack class, "
+    "and n₀, n₁ are the training-set counts of the Normal and Attack classes respectively (so w₁ "
+    "up-weights the minority Attack class in proportion to its scarcity)."
 )
 add_para(
     "A design choice deserves explicit comment: the LSTM and GRU layers process the feature vector "
@@ -845,9 +990,19 @@ add_para(
     "only (up to 10 epochs per fold, batch size 512, early stopping on validation accuracy with "
     "patience 4), using the Lionfish-optimized hyperparameters for that dataset. A final model, "
     "built with the same hyperparameters, was then trained on the entire training partition (batch "
-    "size 64–128, up to 80 epochs, early stopping on training loss with patience 8) and evaluated "
-    "exactly once on the held-out test partition. No hyperparameter, weight, or threshold decision "
-    "was revised based on test-partition performance at any stage."
+    "size 128, identical across all three datasets, up to 80 epochs, early stopping on training loss "
+    "with patience 8) and evaluated exactly once on the held-out test partition. No hyperparameter, "
+    "weight, or threshold decision was revised based on test-partition performance at any stage. "
+    "Table 3a summarizes the batch size used at each training stage."
+)
+add_table_caption("Table 3a. Batch size used at each training stage (identical across all three datasets).")
+add_table(
+    ["Stage", "Batch Size", "Epoch Budget"],
+    [
+        ["Lionfish / random-search quick evaluation", "1024", "3 epochs"],
+        ["5-fold cross-validation", "512", "up to 10 epochs, patience 4 (val. accuracy)"],
+        ["Final model training", "128", "up to 80 epochs, patience 8 (training loss)"],
+    ]
 )
 
 add_heading("3.6. Experimental Environment", level=2)
@@ -858,24 +1013,6 @@ add_para(
     "(42) applied to NumPy, TensorFlow, and all scikit-learn splitting operations."
 )
 
-add_heading("3.7. Use of AI Tools in Methodology", level=2)
-add_para(
-    "In accordance with the journal's policy on the use of generative AI, we disclose here the role "
-    "of an AI tool in this study's methodology, distinct from any use in manuscript writing "
-    "(disclosed separately in the Acknowledgments). Claude Sonnet 5 (Anthropic; model identifier "
-    "claude-sonnet-5) was used as a coding assistant to help design and implement the same-split "
-    "classical-baseline comparison (Section 4.7), the architecture ablation (Section 4.8), the "
-    "random-search optimizer control (Section 4.9), the alternative-split sensitivity analysis "
-    "(Section 4.10), the identifier-feature-removal check (Section 5.5), and the paired statistical "
-    "significance test (Section 4.3), as well as parts of the preprocessing pipeline. All experimental "
-    "design decisions — which comparisons to run, which datasets and splits to use, how to interpret "
-    "the results — were made by the authors; the tool's role was implementation support under author "
-    "direction. All code was reviewed by the authors, and all reported numbers were generated by "
-    "running that code against the study's own data; no results, citations, or experimental findings "
-    "were generated by the AI tool independently of the code it helped implement. The authors take "
-    "full responsibility for the validity of all methods and results reported in this manuscript."
-)
-
 # =======================================================================
 # 4. RESULTS
 # =======================================================================
@@ -883,17 +1020,16 @@ add_heading("4. Results", level=1)
 
 add_heading("4.1. Lionfish Optimization Convergence", level=2)
 add_para(
-    "Figure 1 shows the best-so-far quick-validation accuracy across the 42 candidate evaluations "
+    "Figure 2 shows the best-so-far quick-validation accuracy across the 42 candidate evaluations "
     "(6 population members × initial evaluation + 6 iterations × 6 re-evaluations) performed for "
     "each dataset. WUSTL-EHMS-2020 and ECU-IoHT converged to their best configuration within the "
     "first population evaluation and iteration 4, respectively, while DSICU reached a perfect quick-"
     "validation score in the very first iteration, foreshadowing the near-trivial separability "
     "discussed in Section 5."
 )
-for name, slug in [("ECU-IoHT", "ecu_ioht"), ("WUSTL-EHMS-2020", "wustl_ehms_2020"), ("DSICU", "dsicu")]:
-    add_figure(f"{FIG_DIR}/lionfish_convergence_{slug}.png",
-               f"Figure 1{chr(97 + ['ECU-IoHT','WUSTL-EHMS-2020','DSICU'].index(name))}. "
-               f"Lionfish optimization convergence — {name}.", width_in=4.9)
+add_figure(f"{FIG_DIR}/lionfish_convergence_merged.png",
+           "Figure 2. Lionfish optimization convergence: (a) ECU-IoHT, (b) WUSTL-EHMS-2020, (c) DSICU.",
+           width_in=6.3)
 
 add_heading("4.2. Cross-Validation Stability", level=2)
 add_table_caption("Table 5. Stratified 5-fold cross-validation results (train partition only).")
@@ -904,18 +1040,21 @@ for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
     folds_str = ", ".join(f"{a:.4f}" for a in folds)
     cv_rows.append([name, folds_str, f"{d.get('cv_mean', 0):.4f}", f"{d.get('cv_std', 0):.4f}"])
 add_table(["Dataset", "Per-Fold Validation Accuracy", "Mean", "Std. Dev."], cv_rows)
-add_figure(f"{FIG_DIR}/cv_stability.png", "Figure 2. Cross-validation fold stability across datasets.")
+add_figure(f"{FIG_DIR}/cv_stability.png", "Figure 3. Cross-validation fold stability across datasets.")
 
 add_heading("4.3. Statistical Significance Testing", level=2)
 if SIG is not None:
     add_para(
         "The cross-validation folds in Table 5 make a paired significance test possible: we refit "
-        "HistGradientBoostingClassifier — the strongest classical baseline in Section 4.7 — on the "
-        "identical five stratified folds (same split seed, same preprocessed features) used for the "
-        "hybrid model's cross-validation stage, then compare the two sets of five paired fold "
-        "accuracies with a paired t-test and a Wilcoxon signed-rank test. This directly tests whether "
-        "the accuracy gap between the hybrid model and gradient boosting on ECU-IoHT and "
-        "WUSTL-EHMS-2020 (Section 4.7) is attributable to chance."
+        "HistGradientBoostingClassifier — the strongest classical baseline on WUSTL-EHMS-2020 and "
+        "the baseline used consistently across datasets for this test, though Random Forest is "
+        "marginally stronger than gradient boosting on ECU-IoHT specifically (99.17% vs. 98.63%, "
+        "Table 8) — on the identical five stratified folds (same split seed, same preprocessed "
+        "features) used for the hybrid model's cross-validation stage, then compare the two sets of "
+        "five paired fold accuracies with a paired t-test and a Wilcoxon signed-rank test. This "
+        "directly tests whether the accuracy gap between the hybrid model and gradient boosting on "
+        "ECU-IoHT and WUSTL-EHMS-2020 (Section 4.7) is attributable to chance; Section 4.13's "
+        "reseeded-split significance test additionally covers Random Forest on both datasets."
     )
     sig_rows = []
     for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
@@ -986,16 +1125,16 @@ add_para(
     "reinforcing that its single-seed headline number should be read with this spread in mind rather "
     "than as an exact figure."
 )
-add_figure(f"{FIG_DIR}/cross_dataset_summary.png", "Figure 3. Test-set performance across datasets and metrics.")
+add_figure(f"{FIG_DIR}/cross_dataset_summary.png", "Figure 4. Test-set performance across datasets and metrics.")
 
-for name, slug in [("ECU-IoHT", "ecu_ioht"), ("WUSTL-EHMS-2020", "wustl_ehms_2020"), ("DSICU", "dsicu")]:
-    add_figure(f"{FIG_DIR}/confusion_{slug}.png",
-               f"Figure 4{chr(97 + ['ECU-IoHT','WUSTL-EHMS-2020','DSICU'].index(name))}. Confusion matrix — {name}.",
-               width_in=3.6)
+add_figure(f"{FIG_DIR}/confusion_merged.png",
+           "Figure 5. Confusion matrices: (a) ECU-IoHT, (b) WUSTL-EHMS-2020, (c) DSICU.",
+           width_in=6.3)
 
 add_heading("4.5. Training Dynamics", level=2)
-add_figure(f"{FIG_DIR}/loss_curves.png", "Figure 5. Final-model training loss curves.", width_in=6.3)
-add_figure(f"{FIG_DIR}/accuracy_curves.png", "Figure 6. Final-model training accuracy curves.", width_in=6.3)
+add_figure(f"{FIG_DIR}/training_curves_merged.png",
+           "Figure 6. Final-model training dynamics: (top row) loss curves and (bottom row) accuracy "
+           "curves for ECU-IoHT, WUSTL-EHMS-2020, and DSICU.", width_in=6.3)
 
 add_heading("4.6. Extended Test-Set Metrics", level=2)
 add_para(
@@ -1021,6 +1160,35 @@ add_para(
     "translate directly into undetected intrusion attempts, and accuracy alone would obscure this."
 )
 
+add_heading("4.6a. Per-Attack-Class Recall (ECU-IoHT)", level=2)
+add_para(
+    "A single pooled recall figure (Table 7) can hide large differences between attack subtypes. "
+    "ECU-IoHT's raw capture labels each record with a specific attack subtype in addition to the "
+    "binary Normal/Attack label, so Table 7a reports recall separately for each subtype on the "
+    "held-out test partition. WUSTL-EHMS-2020 and DSICU do not carry an equivalent attack-subtype "
+    "field in the data available to this study (WUSTL-EHMS-2020's provided file has only the binary "
+    "label; DSICU's raw file was unavailable, per Section 5.5), so this breakdown is ECU-IoHT-only."
+)
+add_table_caption("Table 7a. Per-attack-subtype recall for the final hybrid model on ECU-IoHT (test partition).")
+pa_rows = []
+for r in PER_ATTACK["per_attack_type"]:
+    pa_rows.append([r["attack_type"], str(r["n_test_samples"]), r["metric"].split(" (")[0].capitalize(),
+                     f"{r['value']:.3f}"])
+add_table(["Attack Subtype", "N (test)", "Metric", "Value"], pa_rows)
+_dos_recall = next(r["value"] for r in PER_ATTACK["per_attack_type"] if r["attack_type"] == "DoS Attack")
+_arp_recall = next(r["value"] for r in PER_ATTACK["per_attack_type"] if r["attack_type"] == "ARP Spoofing")
+add_para(
+    f"Recall is not uniform across attack subtypes: ARP Spoofing and Smurf Attack are both detected "
+    f"perfectly (recall = 1.000), Nmap Port Scan is detected at 0.945, but DoS Attack — the rarest "
+    f"subtype in the test partition at only {next(r['n_test_samples'] for r in PER_ATTACK['per_attack_type'] if r['attack_type']=='DoS Attack')} records — is detected only "
+    f"{_dos_recall:.3f} of the time, more than half missed. The pooled "
+    f"{EXTRA['ECU-IoHT']['per_class']['attack']['recall']:.4f} attack recall reported in Table 7 is "
+    "therefore driven almost entirely by the numerically dominant "
+    "Smurf Attack subtype and does not represent uniform detection performance across attack types; a "
+    "deployment relying on this model should not assume DoS-style attacks are detected at the same "
+    "rate as the headline recall figure implies."
+)
+
 add_heading("4.7. Same-Split Classical Baselines", level=2)
 add_para(
     "To test whether the hybrid architecture outperforms substantially simpler models under the "
@@ -1029,9 +1197,12 @@ add_para(
     "multilayer perceptron (MLP) — on the same preprocessed features for each dataset, using default "
     "or lightly tuned scikit-learn hyperparameters (Table 8)."
 )
-add_table_caption("Table 8. Same-split classical baselines vs. the proposed hybrid model.")
+add_table_caption("Table 8. Same-split classical baselines vs. the proposed hybrid model. "
+                   "The highest accuracy in each dataset's group of rows is shown in bold.")
 base_rows = []
+group_bounds = []  # (start_row_idx, end_row_idx_inclusive, accuracy_col=2) per dataset, into base_rows
 for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
+    group_start = len(base_rows)
     first_in_group = True
     for mname, m in BASE[name].items():
         base_rows.append([name if first_in_group else "", mname, f"{m['accuracy']*100:.2f}%",
@@ -1042,7 +1213,17 @@ for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
     base_rows.append(["", "Hybrid CNN-LSTM-GRU-Attention (this work)", f"{d['accuracy']*100:.2f}%",
                        f"{d['balanced_accuracy']*100:.2f}%", f"{d['precision']:.3f}", f"{d['recall']:.3f}",
                        f"{d['f1']:.3f}"])
-add_table(["Dataset", "Model", "Accuracy", "Balanced Acc.", "Precision", "Recall", "F1"], base_rows)
+    group_bounds.append((group_start, len(base_rows) - 1))
+
+base_bold = set()
+for start, end in group_bounds:
+    accs = [float(base_rows[ri][2].rstrip("%")) for ri in range(start, end + 1)]
+    best_acc = max(accs)
+    for ri, acc in zip(range(start, end + 1), accs):
+        if abs(acc - best_acc) < 1e-9:  # bold every row tied for the group's best (e.g. DSICU's 100% tie)
+            base_bold.add((ri, 2))
+add_table(["Dataset", "Model", "Accuracy", "Balanced Acc.", "Precision", "Recall", "F1"], base_rows,
+          bold_cells=base_bold)
 add_para(
     "On ECU-IoHT, random forest (99.17% accuracy, F1 = 0.995) and histogram gradient boosting "
     "(98.63%, F1 = 0.991) both matched or exceeded the hybrid model (98.31%, F1 = 0.989). On "
@@ -1066,6 +1247,40 @@ add_para(
     f"false-negative rate = {EXTRA['WUSTL-EHMS-2020']['false_negative_rate']:.3f}. Gradient boosting is "
     "therefore ahead of the hybrid model on every one of these metrics on this benchmark, not only "
     "on accuracy and F1."
+)
+
+add_heading("4.7a. Multi-Seed Robustness of the Classical Baselines", level=2)
+add_para(
+    "Table 8's single-seed classical-baseline comparison could in principle be a lucky (or unlucky) "
+    "draw of the ensemble methods' own internal randomness (bootstrap sampling for random forest; "
+    "tree-growth order and subsampling for histogram gradient boosting). To check this, we retrained "
+    f"both classical baselines at {len(MULTISEED_BASE['ECU-IoHT']['seeds'])} seeds "
+    f"({', '.join(str(s) for s in MULTISEED_BASE['ECU-IoHT']['seeds'])}) on the identical "
+    "split-before-fit train/test partition used everywhere else in this study — only the classifier's "
+    "own internal randomness varies across seeds, not the data partition itself (Table 8a)."
+)
+ms_rows = []
+for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
+    d = MULTISEED_BASE[name]
+    for mname in ["Random Forest", "Gradient Boosting (Hist)"]:
+        m = d[mname]
+        ms_rows.append([
+            name, mname,
+            f"{m['mean']['accuracy']*100:.2f}% ± {m['std']['accuracy']*100:.2f}%",
+            f"{m['mean']['f1']:.3f} ± {m['std']['f1']:.3f}",
+            f"{m['mean']['recall']:.3f} ± {m['std']['recall']:.3f}",
+        ])
+add_table_caption(f"Table 8a. Multi-seed ({len(MULTISEED_BASE['ECU-IoHT']['seeds'])}-seed) classical-baseline "
+                   "robustness check on the identical split-before-fit partition (mean ± std. dev.).")
+add_table(["Dataset", "Model", "Accuracy", "F1", "Recall"], ms_rows)
+add_para(
+    "The multi-seed means are within a fraction of a percentage point of the single-seed Table 8 "
+    "figures on every dataset, and standard deviations are small "
+    f"(≤{max(d[m]['std']['accuracy'] for d in [MULTISEED_BASE[n] for n in MULTISEED_BASE] for m in ['Random Forest','Gradient Boosting (Hist)'])*100:.2f} "
+    "percentage points on accuracy across all six dataset/model combinations), so the classical-"
+    "baseline advantage over the hybrid model on ECU-IoHT and WUSTL-EHMS-2020 (Section 4.7) and the "
+    "DSICU ceiling effect (Section 5.5) are both robust to the classifier's own random initialization, "
+    "not artifacts of a single lucky seed."
 )
 
 add_heading("4.8. Exploratory Architecture Ablation", level=2)
@@ -1385,6 +1600,133 @@ add_para(
     "temporal-sequence input, and simply supplying one is not sufficient by itself to improve results."
 )
 
+add_heading("4.13. Reseeded-Split Significance Testing (Nadeau-Bengio Corrected)", level=2)
+add_para(
+    "Section 4.3's paired significance test compares the hybrid model against gradient boosting "
+    "across the 5 folds of a single stratified cross-validation split. Those 5 folds share most of "
+    "their data with each other by construction (each fold's training data overlaps heavily with "
+    "every other fold's), so treating them as 5 independent paired observations understates the true "
+    "variance and can make a naive paired t-test overconfident. To address this directly, we "
+    "additionally ran the comparison across "
+    f"{NB_TEST['ECU-IoHT']['n_repeats']} independently reseeded 70/30 train/test splits per dataset "
+    f"(seeds {', '.join(str(s) for s in NB_TEST['ECU-IoHT']['seeds'])} — a different random partition "
+    "of the data each time, not merely a different weight-initialization seed on the same partition), "
+    "training the hybrid model and histogram gradient boosting once per split with the same "
+    "Lionfish-selected hyperparameters used throughout, and applying the Nadeau and Bengio "
+    f"(2003) correction, which accounts for the residual data overlap across repeats "
+    "(Table 11c). This is a reduced-N version of the fully independent 10-reseed design the "
+    "manuscript's evaluation checklist calls for; we document the reduction explicitly rather than "
+    "silently substituting a smaller experiment, due to this study's compute budget (the hybrid model "
+    "alone required 45–65 minutes of CPU-only training per reseed on the larger benchmark)."
+)
+add_table_caption("Table 11c. Nadeau-Bengio corrected resampled paired t-test across "
+                   f"{NB_TEST['ECU-IoHT']['n_repeats']} independently reseeded train/test splits: "
+                   "hybrid model vs. histogram gradient boosting.")
+nb_rows = []
+for name in ["ECU-IoHT", "WUSTL-EHMS-2020"]:
+    d = NB_TEST[name]
+    nb = d["nadeau_bengio_test_hgb_minus_hybrid"]
+    per_seed_accs = ", ".join(f"{r['hybrid_acc']*100:.2f}%" for r in d["per_seed"])
+    nb_rows.append([
+        name, per_seed_accs, f"{d['hybrid_mean_acc']*100:.2f}%", f"{d['hgb_mean_acc']*100:.2f}%",
+        f"{nb['t_stat']:.3f}", str(nb["df"]), f"{nb['p_value']:.4f}",
+    ])
+add_table(
+    ["Dataset", "Hybrid Accuracy per Reseed", "Hybrid Mean", "HistGB Mean", "NB t-stat", "df", "NB p-value"],
+    nb_rows,
+    bold_cells={(i, 6) for i, name in enumerate(["ECU-IoHT", "WUSTL-EHMS-2020"])
+                if NB_TEST[name]["nadeau_bengio_test_hgb_minus_hybrid"]["p_value"] < 0.05}
+)
+_ecu_nb = NB_TEST["ECU-IoHT"]["nadeau_bengio_test_hgb_minus_hybrid"]
+_wustl_nb = NB_TEST["WUSTL-EHMS-2020"]["nadeau_bengio_test_hgb_minus_hybrid"]
+add_para(
+    f"The corrected test changes the picture for ECU-IoHT specifically, and we report this directly "
+    f"rather than downplaying it: across reseeded splits, the hybrid model's accuracy varies "
+    f"considerably ({min(r['hybrid_acc'] for r in NB_TEST['ECU-IoHT']['per_seed'])*100:.2f}% to "
+    f"{max(r['hybrid_acc'] for r in NB_TEST['ECU-IoHT']['per_seed'])*100:.2f}%) while gradient "
+    f"boosting stays tightly clustered "
+    f"({min(r['hgb_acc'] for r in NB_TEST['ECU-IoHT']['per_seed'])*100:.2f}%–"
+    f"{max(r['hgb_acc'] for r in NB_TEST['ECU-IoHT']['per_seed'])*100:.2f}%), and at "
+    f"n = {NB_TEST['ECU-IoHT']['n_repeats']} reseeded splits the Nadeau-Bengio corrected test does "
+    f"not reach significance (p = {_ecu_nb['p_value']:.3f}) despite gradient boosting winning on "
+    f"every individual reseed. This does not overturn the Section 4.7 finding that gradient boosting "
+    "matched or exceeded the hybrid model on every reseed tested — it does — but it does mean the "
+    "strength of that advantage, and its statistical robustness, is more properly stated as "
+    "\"consistent but not yet established as statistically significant at this reseed count\" on "
+    "ECU-IoHT specifically, in contrast to Section 4.3's uncorrected, fold-based test, which "
+    "overstated confidence in exactly the way this section's more conservative design is meant to "
+    f"guard against. On WUSTL-EHMS-2020, by contrast, the corrected test remains significant "
+    f"(p = {_wustl_nb['p_value']:.3f}) at the same n = {NB_TEST['WUSTL-EHMS-2020']['n_repeats']}, "
+    "consistent with Section 4.3's original finding and with the much larger, more consistent margin "
+    "gradient boosting holds on that benchmark. We treat the ECU-IoHT result as an open question "
+    "requiring the full 10-reseed design (or more) to resolve with confidence, not as a settled "
+    "finding in either direction, and revise our claims about it accordingly relative to earlier "
+    "sections of this manuscript."
+)
+
+add_heading("4.14. Inference Cost and Deployment Feasibility", level=2)
+add_para(
+    "A model's accuracy on a held-out test set does not by itself say whether it is practical to "
+    "deploy on IoMT-relevant hardware. Table 11d reports, for the hybrid model and the two classical "
+    "baselines on ECU-IoHT and WUSTL-EHMS-2020 (CPU-only, no GPU acceleration, matching Section 3.6), "
+    "the serialized model size on disk, training time for the final model, and per-sample inference "
+    "latency on the full held-out test partition."
+)
+infcost_rows = []
+for name in ["ECU-IoHT", "WUSTL-EHMS-2020"]:
+    ic = INFCOST[name]
+    for mkey, mlabel in [("hybrid", "Hybrid CNN-LSTM-GRU-Attention"),
+                          ("random_forest", "Random Forest"), ("hist_gb", "Histogram Gradient Boosting")]:
+        m = ic[mkey]
+        infcost_rows.append([
+            name, mlabel, f"{m['model_size_mb']:.3f}",
+            f"{m['train_time_sec']:.1f}",
+            f"{m['inference_ms_per_sample']:.4f}",
+        ])
+add_table_caption("Table 11d. Inference cost and model size, CPU-only, ECU-IoHT and WUSTL-EHMS-2020.")
+add_table(["Dataset", "Model", "Model Size (MB)", "Train Time (s)", "Inference (ms/sample)"], infcost_rows)
+add_para(
+    f"The hybrid model's per-sample inference latency "
+    f"({INFCOST['ECU-IoHT']['hybrid']['inference_ms_per_sample']:.4f} ms on ECU-IoHT, "
+    f"{INFCOST['WUSTL-EHMS-2020']['hybrid']['inference_ms_per_sample']:.4f} ms on WUSTL-EHMS-2020) is "
+    f"an order of magnitude slower than either classical baseline on the same hardware "
+    f"(histogram gradient boosting: "
+    f"{INFCOST['ECU-IoHT']['hist_gb']['inference_ms_per_sample']:.4f} ms and "
+    f"{INFCOST['WUSTL-EHMS-2020']['hist_gb']['inference_ms_per_sample']:.4f} ms respectively), and "
+    f"its training time ({INFCOST['ECU-IoHT']['hybrid']['train_time_sec']:.0f} s and "
+    f"{INFCOST['WUSTL-EHMS-2020']['hybrid']['train_time_sec']:.0f} s) is two to three orders of "
+    "magnitude longer than either classical baseline's. Combined with Section 4.7's finding that the "
+    "classical baselines matched or exceeded the hybrid model's accuracy on both of these benchmarks, "
+    "this is a second, independent reason — beyond predictive performance — to prefer a classical "
+    "baseline for a resource-constrained IoMT deployment on this evidence: it is simultaneously "
+    "cheaper to train, faster to run, and at least as accurate."
+)
+add_para(
+    "Figure 7 plots precision-recall curves for WUSTL-EHMS-2020's Attack class, comparing the hybrid "
+    "model, histogram gradient boosting, and the class-weighted-BCE variant from Section 4.11, "
+    "extending Table 7's single-threshold false-negative-rate figure into the full precision/recall "
+    "trade-off curve requested for this comparison."
+)
+add_figure(f"{FIG_DIR}/wustl_pr_curves.png",
+           f"Figure 7. Precision-recall curves for WUSTL-EHMS-2020's Attack class: hybrid model "
+           f"(AP={WUSTL_PR_AP['Hybrid CNN-LSTM-GRU-Attention (main experiment)']:.3f}), histogram "
+           f"gradient boosting (AP={WUSTL_PR_AP['Histogram Gradient Boosting (strongest classical baseline)']:.3f}), "
+           f"and the class-weighted-BCE variant "
+           f"(AP={WUSTL_PR_AP['Hybrid, class-weighted BCE variant (Section 4.11)']:.3f}).",
+           width_in=5.0)
+add_para(
+    f"Average precision confirms the pattern already visible in Table 8's accuracy/F1 comparison and "
+    f"Section 4.11's threshold sweep: gradient boosting "
+    f"(AP={WUSTL_PR_AP['Histogram Gradient Boosting (strongest classical baseline)']:.3f}) dominates "
+    f"the hybrid model's precision-recall trade-off at essentially every operating point, and the "
+    f"class-weighted-BCE variant "
+    f"(AP={WUSTL_PR_AP['Hybrid, class-weighted BCE variant (Section 4.11)']:.3f}) improves only "
+    f"marginally on the main experiment's hybrid model "
+    f"(AP={WUSTL_PR_AP['Hybrid CNN-LSTM-GRU-Attention (main experiment)']:.3f}) — consistent with "
+    "Section 4.11's own framing of the class-weighted loss as a genuine but partial fix, not a "
+    "resolution of the underlying gap to gradient boosting."
+)
+
 # =======================================================================
 # 5. DISCUSSION
 # =======================================================================
@@ -1432,7 +1774,6 @@ ecu_rows = [
     ["Alohali et al. (2025)", "EloHTSCD-SEGO", "99.33%"],
     ["Mosaiyebzadeh et al. (2025)", "CNN", "95.48%"],
     ["Alharbi & Khan (2025)", "CNN-LSTM", "98.00%"],
-    ["Krishna Kumari et al. (2026)", "MREQGAN-DSA", "99.77%"],
     ["This work (split-before-fit)", "CNN-LSTM-GRU-Attention", "98.31% (F1 = 0.989)"],
 ]
 add_table(["Author(s)", "Methodology", "Reported Accuracy"], ecu_rows)
@@ -1454,10 +1795,16 @@ add_para(
 )
 add_table_caption("Table 14. Comparison on DSICU (intrusion-detection task only).")
 dsicu_rows = [
-    ["Krishna Kumari et al. (2026)", "MREQGAN-DSA", "99.77%"],
     ["This work (split-before-fit)", "CNN-LSTM-GRU-Attention", "100.00% (F1 = 1.000)"],
 ]
 add_table(["Author(s)", "Methodology", "Reported Result"], dsicu_rows)
+add_para(
+    "No directly comparable published intrusion-detection result on DSICU specifically is included "
+    "here: on verification against the publisher's record, the MREQGAN-DSA study previously cited in "
+    "this context (Krishna Kumari et al.) reports results on NSL-KDD and WUSTL-EHMS-2020 only, not "
+    "DSICU, and citing it here would misattribute a result it did not report; it is instead cited "
+    "correctly in Section 2.3 and Table 12 against its actual WUSTL-EHMS-2020 evaluation."
+)
 add_para(
     "On DSICU, the split-before-fit result matches the highest published figures at 100% accuracy across "
     f"every cross-validation fold and the held-out test partition, with near-zero training loss "
@@ -1468,6 +1815,46 @@ add_para(
     "baselines (logistic regression, random forest, gradient boosting, and an MLP all also reach "
     "100% on the same split), and Section 4.10's flow-grouped sensitivity split shows it is not an "
     "artifact of related records appearing in both partitions either."
+)
+
+add_para(
+    "Table 15 makes the evaluation-protocol gap underlying Tables 12–14 explicit rather than implicit. "
+    "For each comparator, it audits whether the source publication states that (a) the train/test "
+    "split preceded any fitting of feature selection or scaling, (b) obviously identifying features "
+    "(e.g., IP/MAC addresses, ports, timestamps as raw values) were excluded, (c) results were "
+    "compared against a same-split classical baseline, (d) any optimizer/tuning method used was "
+    "controlled against an unguided alternative at a matched budget, and (e) results were checked "
+    "against an alternative (e.g., temporal or grouped) split. Because most published intrusion-"
+    "detection papers in this space do not report these protocol details at all, most cells below are "
+    "\"Not stated\" rather than \"No\" — we could not confirm the protocol was absent, only that the "
+    "source publication does not say either way. This is itself the point the audit is meant to make: "
+    "headline accuracy numbers in Tables 12–14 are being compared across very different (and mostly "
+    "undisclosed) levels of methodological rigor, which is exactly why this manuscript reports its own "
+    "protocol in full (Section 3.2) rather than relying on accuracy alone."
+)
+add_table_caption("Table 15. Protocol audit of the comparators in Tables 12–14 and this work.")
+protocol_rows = [
+    ["This work", "Yes", "Yes", "Yes", "Yes", "Yes"],
+    ["Tauqeer et al. (2022)", "Not stated", "Not stated", "Not stated", "N/A (no tuning method reported)", "Not stated"],
+    ["Judith et al. (2023)", "Not stated", "Not stated", "Not stated", "N/A", "Not stated"],
+    ["Shaikh et al. (2024)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Wu et al. (2025)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Balhareth et al. (2026)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Abid (2026)", "Not stated", "Not stated", "Yes (multi-classifier)", "N/A", "Not stated"],
+    ["Aversano et al. (2026)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Abdelhaq et al. (2026)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Mosaiyebzadeh et al. (2025)", "Not stated", "Not stated", "Not stated", "N/A", "Not stated"],
+    ["Krishna Kumari et al. (2026)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Vijayakumar et al. (2023)", "Not stated", "Not stated", "Not stated", "N/A", "Not stated"],
+    ["Areia et al. (2024)", "Not stated", "Not stated", "Not stated", "N/A", "Not stated"],
+    ["Algethami & Alshamrani (2024)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Alohali et al. (2025)", "Not stated", "Not stated", "Not stated", "Not stated", "Not stated"],
+    ["Alharbi & Khan (2025)", "Not stated", "Not stated", "Not stated", "N/A", "Not stated"],
+]
+add_table(
+    ["Author(s)", "Split-before-fit?", "Identifier features excluded?",
+     "Same-split baseline comparison?", "Optimizer control?", "Alternative split tested?"],
+    protocol_rows
 )
 
 add_heading("5.2. Do the Hybrid Architecture and Lionfish Optimizer Help?", level=2)
@@ -1564,9 +1951,30 @@ add_para(
     "consequently attributed to the same mechanism identified for ECU-IoHT: a small set of protocol-"
     "level features (TCP/MQTT header fields) that are close to perfectly correlated with the Normal/"
     "Attack label in this particular capture, corroborated by the flow-grouped sensitivity split "
-    "(Section 4.10) and by classical baselines reaching the same ceiling (Section 4.7). This should "
+    "(Section 4.10) and by classical baselines reaching the same ceiling (Section 4.7). As a direct "
+    f"diagnostic, we computed the single-feature AUC of each of the {DSICU_AUC['n_features_checked']} "
+    "surviving (post-selection, standardized) features against the training label, with no model fit "
+    "(Table 16). The strongest single feature alone reaches "
+    f"AUC = {DSICU_AUC['max_single_feature_auc']:.3f}, short of near-perfect (≥0.98) on its own but "
+    "still far above chance, indicating the separating signal is concentrated in a small number of "
+    "protocol-adjacent fields rather than requiring the hybrid architecture's representational "
+    "capacity to find; the original clinical feature names could not be recovered for this diagnostic "
+    "(see Table 16 note), so it is reported by feature index rather than semantic label. This should "
     "still be replicated on an independently captured DSICU-like dataset before being treated as a "
-    "general property of the detection task."
+    "general property of the detection task, and given all of this, DSICU is reported throughout this "
+    "paper as a cautionary case study rather than as evidence for the architecture's effectiveness."
+)
+add_table_caption(
+    "Table 16. DSICU per-feature diagnostic: single-feature AUC against the training label for each "
+    "of the 16 post-selection, standardized features (no model fit; features identified by their "
+    "1-indexed position among the SelectKBest-retained set, since original clinical feature names "
+    "were not recoverable from the restricted-access source file in this analysis environment)."
+)
+add_table(
+    ["Feature Index", "AUC vs. Label (raw direction)", "Separating Power (max(AUC, 1-AUC))"],
+    [[str(r["selected_feature_index"]), f"{r['auc_vs_label']:.3f}", f"{r['separating_power_auc']:.3f}"]
+     for r in DSICU_AUC["per_feature"][:5]] +
+    [["...", "...", "(remaining 11 features in Supplementary Materials)"]]
 )
 add_para(
     "Second, the recurrent layers in the hybrid architecture process features in the dataset's "
@@ -1589,12 +1997,18 @@ add_para(
     "Fifth, while Section 4.4 reports four seeds on the main split's train/test partition and finds "
     "tight variation for ECU-IoHT and DSICU and moderate variation for WUSTL-EHMS-2020's F1, this "
     "only characterizes sensitivity to weight initialization on one fixed partition; it does not "
-    "substitute for repeated re-splitting (a distinct question addressed only partially by Section "
-    "4.10's single alternative split per dataset). We did add a paired significance test (Section "
-    "4.3) confirming that gradient boosting's edge over the hybrid model on ECU-IoHT and "
-    "WUSTL-EHMS-2020 is not attributable to chance, but that test is limited to five matched "
-    "cross-validation folds per dataset — it is not the same as testing across many independently "
-    "reseeded train/test splits, which remains left for future work. Sixth, the "
+    "substitute for repeated re-splitting. Section 4.3's paired significance test across five matched "
+    "cross-validation folds within a single split originally suggested gradient boosting's edge was "
+    "not attributable to chance on either ECU-IoHT or WUSTL-EHMS-2020, but folds within one split are "
+    "not independent, so Section 4.13 reran the comparison across four independently reseeded "
+    "train/test splits with a Nadeau-Bengio correction for that residual dependence. The corrected "
+    "test confirms gradient boosting's advantage on WUSTL-EHMS-2020, but on ECU-IoHT it does not "
+    "reach significance at this reseed count even though gradient boosting won every individual "
+    "reseed, so we now state the ECU-IoHT baseline comparison as consistent but not yet "
+    "statistically established, revising the more confident claim the uncorrected test had supported. "
+    "This is itself a demonstration of the review's underlying concern: an evaluation protocol's "
+    "statistical rigor can change which findings hold up, and a full 10-reseed (or larger) version of "
+    "Section 4.13's design remains future work to resolve ECU-IoHT's case with more confidence. Sixth, the "
     "architecture ablation and random-search control both use a reduced-epoch quick-evaluation "
     "protocol (3 epochs) for practicality, and a single run per configuration; the noisy DSICU "
     "CNN+LSTM+GRU result in Section 4.8 (0.833, versus 0.988–0.996 for adjacent variants) illustrates "
@@ -1636,9 +2050,15 @@ add_para(
     "budget, and even after removing identifier-like features, searching hyperparameters independently "
     "inside each alternative split, and matching the alternative-split training budget to the main "
     "experiment's, a temporal split still reduced ECU-IoHT accuracy to 85.8% and left WUSTL-EHMS-2020 "
-    "recall at 0.385. A paired significance test on matched cross-validation folds confirms these "
-    "baseline advantages on ECU-IoHT and WUSTL-EHMS-2020 are not attributable to chance "
-    "(p = 0.00047 and p = 0.00203, respectively). Only DSICU's near-perfect separability held up "
+    "recall at 0.385. A paired significance test on matched cross-validation folds within a single "
+    "split initially suggested both baseline advantages were not attributable to chance "
+    "(p = 0.00047 and p = 0.00203 for ECU-IoHT and WUSTL-EHMS-2020, respectively), but a more "
+    "conservative Nadeau-Bengio corrected test across four independently reseeded train/test splits "
+    f"(Section 4.13) confirms this for WUSTL-EHMS-2020 (p = {_wustl_nb['p_value']:.3f}) while finding "
+    f"it not yet statistically established at this reseed count for ECU-IoHT (p = {_ecu_nb['p_value']:.3f}), "
+    "despite gradient boosting winning on every individual reseed — a finding we report as an open "
+    "question rather than resolve, and a concrete illustration of why evaluation-protocol rigor can "
+    "change a paper's conclusions. Only DSICU's near-perfect separability held up "
     "under every check applied, including a flow-grouped split with the split-defining port fields "
     "excluded from the feature set entirely, hyperparameters searched independently within it, and a "
     "training budget matched to the main experiment — the combination of tests best positioned to "
@@ -1702,6 +2122,19 @@ add_para(
 # BACK MATTER (MDPI required sections)
 # =======================================================================
 add_backmatter(
+    "Abbreviations",
+    "The following abbreviations are used in this manuscript: IoMT, Internet of Medical Things; "
+    "IoHT, Internet of Health Things; CNN, Convolutional Neural Network; LSTM, Long Short-Term "
+    "Memory; GRU, Gated Recurrent Unit; BCE, Binary Cross-Entropy; wBCE, class-weighted Binary "
+    "Cross-Entropy; ROC, Receiver Operating Characteristic; AUC, Area Under the Curve; PR, "
+    "Precision-Recall; RF, Random Forest; HistGB, Histogram-based Gradient Boosting; MLP, "
+    "Multi-Layer Perceptron; LFO, Lionfish Optimization; RS, Random Search; CV, Cross-Validation; "
+    "NB test, Nadeau-Bengio corrected resampled t-test; DSICU, the restricted-access dataset used "
+    "in this study as a cautionary case study (see Section 5); ECU-IoHT, ECU Internet of Health "
+    "Things dataset; WUSTL-EHMS-2020, Washington University in St. Louis Enhanced Healthcare "
+    "Monitoring System 2020 dataset."
+)
+add_backmatter(
     "Supplementary Materials",
     "The following supporting information is provided with this submission: preprocessing, model, "
     "Lionfish optimization, classical-baseline, ablation, random-search, sensitivity-analysis, "
@@ -1746,23 +2179,34 @@ add_backmatter(
 )
 add_backmatter(
     "Acknowledgments",
-    "During the preparation of this manuscript, the author(s) used Claude Sonnet 5 (Anthropic; model "
-    "identifier claude-sonnet-5) for preprocessing pipeline implementation support; design and "
-    "implementation of the classical-baseline, architecture-ablation, random-search-control, "
-    "sensitivity-analysis, class-imbalance-mitigation, multi-seed optimizer-comparison, and "
-    "sliding-window-sequence experiments; manuscript drafting assistance; and results-reporting "
-    "formatting. The authors have reviewed and edited the output and take full responsibility for "
-    "the content of this publication."
+    "In accordance with the journal's policy on the use of generative AI, the authors disclose that "
+    "Claude Sonnet 5 (Anthropic; model identifier claude-sonnet-5) was used both in this study's "
+    "methodology and in manuscript preparation. As a methodology tool, it served as a coding "
+    "assistant to help design and implement the preprocessing pipeline, the same-split "
+    "classical-baseline comparison (Section 4.7), the architecture ablation (Section 4.8), the "
+    "random-search optimizer control (Section 4.9), the alternative-split sensitivity analysis "
+    "(Section 4.10), the identifier-feature-removal check (Section 5.5), the paired statistical "
+    "significance test (Section 4.3), the class-imbalance-mitigation and sliding-window-sequence "
+    "experiments (Section 4.11-4.12), and the multi-seed classical-baseline, inference-cost, and "
+    "per-attack-class recall analyses. All experimental design decisions — which comparisons to run, "
+    "which datasets and splits to use, how to interpret the results — were made by the authors; the "
+    "tool's role was implementation support under author direction. All code was reviewed by the "
+    "authors, and all reported numbers were generated by running that code against the study's own "
+    "data; no results, citations, or experimental findings were generated by the AI tool "
+    "independently of the code it helped implement. As a manuscript-preparation tool, it was used "
+    "for drafting assistance and results-reporting formatting. The authors have reviewed and edited "
+    "all AI-assisted output and take full responsibility for the validity of all methods, results, "
+    "and content reported in this publication."
 )
 add_backmatter("Conflicts of Interest", "The authors declare no conflicts of interest.")
 
 # =======================================================================
-# REFERENCES (auto-numbered by the template's MDPI_8.1_references style)
+# REFERENCES (auto-numbered by the template's MDPI81references style)
 # =======================================================================
 add_heading("References", level=1)
 _last_was_heading[0] = False
 for key, formatted in REFS:
-    p = doc.add_paragraph(formatted, style="MDPI_8.1_references")
+    p = doc.add_paragraph(formatted, style="MDPI81references")
 
 # ---------------------------------------------------------------------
 # Clean up document metadata (the template's core properties still say

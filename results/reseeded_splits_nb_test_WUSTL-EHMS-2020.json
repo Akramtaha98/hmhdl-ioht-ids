@@ -1,0 +1,57 @@
+{
+  "dataset": "WUSTL-EHMS-2020",
+  "n_repeats": 4,
+  "seeds": [
+    42,
+    43,
+    44,
+    45
+  ],
+  "note": "Reduced from the review's suggested 10x to 4x independently reseeded train/test splits (different random_state per repeat, not just weight-init seed), due to this session's compute budget; Nadeau-Bengio correction applied for the resulting train/test overlap across repeats, per Nadeau & Bengio (2003).",
+  "per_seed": [
+    {
+      "seed": 42,
+      "n_train": 11422,
+      "n_test": 4896,
+      "hybrid_acc": 0.9375,
+      "hgb_acc": 0.9726307189542484,
+      "hybrid_train_time_sec": 317.2,
+      "hgb_train_time_sec": 0.37
+    },
+    {
+      "seed": 43,
+      "n_train": 11422,
+      "n_test": 4896,
+      "hybrid_acc": 0.9311683006535948,
+      "hgb_acc": 0.9769199346405228,
+      "hybrid_train_time_sec": 330.6,
+      "hgb_train_time_sec": 0.37
+    },
+    {
+      "seed": 44,
+      "n_train": 11422,
+      "n_test": 4896,
+      "hybrid_acc": 0.9240196078431373,
+      "hgb_acc": 0.9734477124183006,
+      "hybrid_train_time_sec": 317.6,
+      "hgb_train_time_sec": 0.39
+    },
+    {
+      "seed": 45,
+      "n_train": 11422,
+      "n_test": 4896,
+      "hybrid_acc": 0.9191176470588235,
+      "hgb_acc": 0.9746732026143791,
+      "hybrid_train_time_sec": 342.0,
+      "hgb_train_time_sec": 17.15
+    }
+  ],
+  "hybrid_mean_acc": 0.9279513888888888,
+  "hgb_mean_acc": 0.9744178921568627,
+  "nadeau_bengio_test_hgb_minus_hybrid": {
+    "mean_diff": 0.04646650326797383,
+    "t_stat": 6.580818684616055,
+    "df": 3,
+    "p_value": 0.007139338211724633
+  }
+}

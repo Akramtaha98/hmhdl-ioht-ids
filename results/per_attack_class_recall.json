@@ -1,0 +1,36 @@
+{
+  "dataset": "ECU-IoHT",
+  "note": "WUSTL-EHMS-2020 and DSICU are not included: WUSTL-EHMS-2020's provided CSV carries only a binary label (no attack-subtype field), and DSICU's raw source file is unavailable in this environment (restricted-access dataset).",
+  "per_attack_type": [
+    {
+      "attack_type": "ARP Spoofing",
+      "n_test_samples": 722,
+      "metric": "recall (fraction correctly labeled Attack)",
+      "value": 1.0
+    },
+    {
+      "attack_type": "DoS Attack",
+      "n_test_samples": 205,
+      "metric": "recall (fraction correctly labeled Attack)",
+      "value": 0.478
+    },
+    {
+      "attack_type": "Nmap Port Scan",
+      "n_test_samples": 2068,
+      "metric": "recall (fraction correctly labeled Attack)",
+      "value": 0.9449
+    },
+    {
+      "attack_type": "No Attack",
+      "n_test_samples": 7036,
+      "metric": "specificity (fraction correctly labeled Normal)",
+      "value": 0.9547
+    },
+    {
+      "attack_type": "Smurf Attack",
+      "n_test_samples": 23332,
+      "metric": "recall (fraction correctly labeled Attack)",
+      "value": 1.0
+    }
+  ]
+}

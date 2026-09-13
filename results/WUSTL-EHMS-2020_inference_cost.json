@@ -1,0 +1,31 @@
+{
+  "dataset": "WUSTL-EHMS-2020",
+  "hybrid": {
+    "n_params": 13959,
+    "model_size_mb": 0.239,
+    "train_time_sec": 406.29,
+    "inference_total_sec_full_test_set": 0.9583,
+    "inference_ms_per_sample": 0.19572,
+    "n_test": 4896,
+    "peak_rss_mb": 849.59,
+    "peak_rss_delta_mb": 209.47
+  },
+  "random_forest": {
+    "model_size_mb": 21.4641,
+    "train_time_sec": 9.94,
+    "inference_total_sec_full_test_set": 0.3793,
+    "inference_ms_per_sample": 0.07747,
+    "n_test": 4896,
+    "peak_rss_mb": 871.94,
+    "peak_rss_delta_mb": 22.36
+  },
+  "hist_gb": {
+    "model_size_mb": 0.3682,
+    "train_time_sec": 20.9,
+    "inference_total_sec_full_test_set": 0.1458,
+    "inference_ms_per_sample": 0.02979,
+    "n_test": 4896,
+    "peak_rss_mb": 871.94,
+    "peak_rss_delta_mb": 0.0
+  }
+}

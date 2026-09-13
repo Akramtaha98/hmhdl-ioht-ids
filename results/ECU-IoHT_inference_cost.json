@@ -1,0 +1,31 @@
+{
+  "dataset": "ECU-IoHT",
+  "hybrid": {
+    "n_params": 31005,
+    "model_size_mb": 0.4341,
+    "train_time_sec": 613.63,
+    "inference_total_sec_full_test_set": 1.1267,
+    "inference_ms_per_sample": 0.03377,
+    "n_test": 33363,
+    "peak_rss_mb": 837.62,
+    "peak_rss_delta_mb": 196.12
+  },
+  "random_forest": {
+    "model_size_mb": 16.3204,
+    "train_time_sec": 1.79,
+    "inference_total_sec_full_test_set": 0.1489,
+    "inference_ms_per_sample": 0.00446,
+    "n_test": 33363,
+    "peak_rss_mb": 867.29,
+    "peak_rss_delta_mb": 29.67
+  },
+  "hist_gb": {
+    "model_size_mb": 0.3303,
+    "train_time_sec": 0.69,
+    "inference_total_sec_full_test_set": 0.0518,
+    "inference_ms_per_sample": 0.00155,
+    "n_test": 33363,
+    "peak_rss_mb": 885.62,
+    "peak_rss_delta_mb": 18.34
+  }
+}

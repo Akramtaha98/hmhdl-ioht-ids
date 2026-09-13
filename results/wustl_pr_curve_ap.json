@@ -1,0 +1,6 @@
+{
+  "Hybrid CNN-LSTM-GRU-Attention (main experiment)": 0.7434233201074967,
+  "Histogram Gradient Boosting (strongest classical baseline)": 0.9692831638764029,
+  "Hybrid, class-weighted BCE variant (Section 4.11)": 0.7625543463296673,
+  "no_skill_baseline": 0.12540849673202614
+}
