@@ -346,6 +346,9 @@ NOID = {n: load_extra(n, "noid") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU
 SENS2 = {n: load_extra(n, "sensitivity_v2") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]}
 RSEED = {n: load_extra(n, "repeated_seeds") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]}
 BASE_EXTRA = {n: load_extra(n, "baseline_extra_metrics") for n in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]}
+MULTISEED = {n: load_extra(n, "lfo_vs_rs_multiseed") for n in ["ECU-IoHT", "WUSTL-EHMS-2020"]}
+SLIDING_WINDOW_V2 = load_extra("ECU-IoHT", "sliding_window_v2")
+RECALL_FIX_V2 = load_extra("WUSTL-EHMS-2020", "recall_fix_v2")
 
 _sig_path = f"{RESULTS_DIR}/significance_test.json"
 SIG = None
@@ -555,7 +558,15 @@ abstract = (
     "matched budget. Removing identifier-like fields and moving to alternative, harder splits both "
     "reduced performance materially, most notably a substantial recall drop on WUSTL-EHMS-2020. "
     "DSICU's perfect separability survived every check applied, but given its restricted-access "
-    "status we report it as an unresolved artifact, not a validated result. Conclusion: a "
+    "status we report it as an unresolved artifact, not a validated result. A follow-up, budget-"
+    "matched, three-seed comparison over an expanded search space (adding learning rate) confirms "
+    "this: random search matched or slightly exceeded Lionfish on both benchmarks tested, with no "
+    "statistically significant advantage for either method. A class-weighted loss did recover a "
+    "genuine, non-cherry-picked improvement in WUSTL-EHMS-2020's minority-class recall (0.591 vs. "
+    "0.552 at a validation-selected threshold) without a compensating loss in precision, while a "
+    "true multi-packet sliding-window sequence representation for ECU-IoHT, tested under the same "
+    "fair, confound-matched protocol as the existing temporal-split baseline, underperformed the "
+    "simpler feature-axis representation. Conclusion: a "
     "split-before-fit protocol alone does not establish deployability; matched baselines, ablations, "
     "significance testing, and alternative splits together distinguish real generalization from "
     "artifacts, and on two of three benchmarks favor simpler models over the proposed architecture."
@@ -1096,19 +1107,17 @@ add_para(
     "component screen, not a precision estimate of each component's true contribution."
 )
 
-add_heading("4.9. Lionfish vs. Random Search (Single-Run Comparison)", level=2)
+add_heading("4.9. Lionfish vs. Random Search", level=2)
 add_para(
     "To test whether the Lionfish metaheuristic outperforms unguided sampling, we ran a plain random "
     "search over the same five-dimensional hyperparameter space with the same evaluation budget (42 "
     "candidate evaluations: 6 initial + 6 iterations × 6) and the same quick-evaluation protocol, "
-    "using an independently seeded random stream (Table 10). This is a single run per optimizer per "
-    "dataset; it is sufficient to show Lionfish does not have a clear, consistent advantage at this "
-    "budget, but not sufficient to characterize the full distribution of either method's outcomes. "
-    "A robust optimizer comparison would repeat both methods multiple times per dataset and report "
-    "the mean and standard deviation across runs; we report the single-run result here directly "
-    "rather than deferring the comparison entirely."
+    "using an independently seeded random stream (Table 10). This first pass is a single run per "
+    "optimizer per dataset; it is sufficient to show Lionfish does not have a clear, consistent "
+    "advantage at this budget, but not sufficient to characterize the full distribution of either "
+    "method's outcomes."
 )
-add_table_caption("Table 10. Lionfish vs. random search at a matched 42-candidate evaluation budget.")
+add_table_caption("Table 10. Lionfish vs. random search at a matched 42-candidate evaluation budget (single run).")
 ls_rows = []
 for name in ["ECU-IoHT", "WUSTL-EHMS-2020", "DSICU"]:
     lf_acc = R[name]["lionfish_best_val_acc_quick"]
@@ -1119,10 +1128,49 @@ add_para(
     "Lionfish did not outperform random search at this matched budget on any dataset: the two were "
     "effectively tied on ECU-IoHT (+0.0001) and DSICU (0.0000, both saturating at a perfect "
     "quick-validation score), and random search was actually better on WUSTL-EHMS-2020 (−0.0101, "
-    "i.e., random search reached 0.915 vs. Lionfish's 0.905). At this evaluation budget, we cannot "
-    "claim Lionfish provides an optimization advantage over unguided random sampling; a larger "
-    "budget, multiple repeated runs per method, or a harder/higher-dimensional search space would be "
-    "needed to test whether an advantage emerges elsewhere."
+    "i.e., random search reached 0.915 vs. Lionfish's 0.905)."
+)
+add_para(
+    "Because a single run per method cannot support a statistical claim either way, we followed up "
+    "with a three-seed (42, 43, 44), budget-matched comparison on ECU-IoHT and WUSTL-EHMS-2020 (DSICU "
+    "was excluded as already saturated at a perfect score for every method), using an expanded "
+    "six-dimensional search space that adds the learning rate (log-uniform over "
+    "[1×10⁻⁴, 1×10⁻²]) to the original five architecture hyperparameters, directly addressing the "
+    "possibility that a narrow, low-dimensional space simply favors random sampling. Each of the six "
+    "(dataset, seed) combinations was run to completion at the same 42-candidate budget, and the "
+    "paired best-validation-accuracy values across seeds were compared with a paired t-test and a "
+    "Wilcoxon signed-rank test (Table 10a)."
+)
+add_table_caption(
+    "Table 10a. Lionfish vs. random search, three-seed comparison on a six-dimensional search space "
+    "(architecture hyperparameters + learning rate), 42-candidate budget per run."
+)
+ms_rows = []
+for name in ["ECU-IoHT", "WUSTL-EHMS-2020"]:
+    s = MULTISEED[name]["summary"]
+    lfo_vals = ", ".join(f"{r['best_val_acc']:.4f}" for r in MULTISEED[name]["lfo"])
+    rs_vals = ", ".join(f"{r['best_val_acc']:.4f}" for r in MULTISEED[name]["random_search"])
+    ms_rows.append([name, lfo_vals, rs_vals,
+                     f"{s['lfo_mean']:.4f} ± {s['lfo_std']:.4f}",
+                     f"{s['rs_mean']:.4f} ± {s['rs_std']:.4f}",
+                     f"{s['paired_t_p']:.3f}", f"{s['wilcoxon_p']:.3f}"])
+add_table(["Dataset", "Lionfish (seeds 42/43/44)", "Random Search (seeds 42/43/44)",
+           "Lionfish Mean ± SD", "Random Search Mean ± SD", "Paired t-test p", "Wilcoxon p"], ms_rows)
+add_para(
+    "On ECU-IoHT, random search won on all three seeds (mean 0.9312 ± 0.0009 vs. Lionfish's 0.9276 "
+    f"± 0.0026), though the gap is not statistically significant at this sample size "
+    f"(paired t-test p = {MULTISEED['ECU-IoHT']['summary']['paired_t_p']:.3f}, Wilcoxon p = "
+    f"{MULTISEED['ECU-IoHT']['summary']['wilcoxon_p']:.3f}). On WUSTL-EHMS-2020 the two methods were "
+    "essentially tied (Lionfish 0.9234 ± 0.0007 vs. random search 0.9227 ± 0.0004, "
+    f"p = {MULTISEED['WUSTL-EHMS-2020']['summary']['paired_t_p']:.3f}). We note explicitly that n = 3 "
+    "paired seeds is a small sample: the Wilcoxon signed-rank test has a p-value floor of 0.25 at "
+    "n = 3 regardless of effect size, so neither test result should be read as strong statistical "
+    "evidence in either direction — only as a description of the observed seeds. Taken together with "
+    "the single-run result above and the expanded search space, this three-seed follow-up finds no "
+    "evidence that Lionfish provides a genuine optimization advantage over random search at this "
+    "evaluation budget on either benchmark tested; if anything, the point estimates on ECU-IoHT "
+    "trend in random search's favor. We report this directly rather than retaining an unsupported "
+    "superiority claim for the optimizer that gives this framework its name."
 )
 
 add_heading("4.10. Sensitivity Analysis: Alternative Splits", level=2)
@@ -1227,6 +1275,116 @@ add_para(
     "robustness to one reasonable grouping choice, not a proof of flow-level independence."
 )
 
+add_heading("4.11. Class-Imbalance Mitigation for WUSTL-EHMS-2020", level=2)
+add_para(
+    "Section 4.6 showed the main WUSTL-EHMS-2020 model misses roughly "
+    f"{EXTRA['WUSTL-EHMS-2020']['false_negative_rate']*100:.0f}% of genuine attacks at the default "
+    "threshold, and Section 4.7 showed gradient boosting reaches materially higher recall (0.809) on "
+    "the identical split. To test whether this gap is addressable within the hybrid architecture "
+    "itself, rather than only by switching models, we retrained the final model with two "
+    "class-imbalance-aware loss functions in place of plain binary cross-entropy: class-weighted "
+    "binary cross-entropy (weighting the attack class by the inverse of its training-set frequency) "
+    "and focal loss (γ = 2.0, α = 0.25). Both variants used the identical training protocol as the "
+    "main experiment (up to 80 epochs, early stopping on training-loss plateau with patience 8, "
+    "trained on the same 85% of the training partition), holding out the remaining 15% solely to "
+    "select an F1-optimal decision threshold via the precision–recall curve — never touched during "
+    "training or used to tune the loss itself — before evaluating once on the untouched test "
+    "partition."
+)
+add_table_caption("Table 11a. Class-imbalance mitigation for WUSTL-EHMS-2020: test-set results at each variant's validation-selected threshold, vs. the unweighted baseline.")
+rf = RECALL_FIX_V2["variants"]
+cw = rf["class_weighted_bce"]
+fl = rf["focal_loss"]
+cw_t = cw["test_at_validation_threshold"]
+fl_t = fl["test_at_validation_threshold"]
+add_table(
+    ["Variant", "Threshold", "Precision", "Recall", "F1", "ROC-AUC", "PR-AUC"],
+    [
+        ["Baseline (unweighted BCE, default 0.5)", "0.500", f"{R['WUSTL-EHMS-2020']['precision']:.3f}",
+         f"{R['WUSTL-EHMS-2020']['recall']:.3f}", f"{R['WUSTL-EHMS-2020']['f1']:.3f}",
+         f"{EXTRA['WUSTL-EHMS-2020']['roc_auc']:.3f}", f"{EXTRA['WUSTL-EHMS-2020']['pr_auc']:.3f}"],
+        ["Class-weighted BCE (validation-selected)", f"{cw['validation_selected_threshold']:.3f}",
+         f"{cw_t['precision']:.3f}", f"{cw_t['recall']:.3f}", f"{cw_t['f1']:.3f}",
+         f"{cw['roc_auc_test']:.3f}", f"{cw['pr_auc_test']:.3f}"],
+        ["Focal loss (validation-selected)", f"{fl['validation_selected_threshold']:.3f}",
+         f"{fl_t['precision']:.3f}", f"{fl_t['recall']:.3f}", f"{fl_t['f1']:.3f}",
+         f"{fl['roc_auc_test']:.3f}", f"{fl['pr_auc_test']:.3f}"],
+    ],
+)
+add_para(
+    f"Class-weighted BCE gives a genuine Pareto improvement over the baseline: recall rises from "
+    f"{R['WUSTL-EHMS-2020']['recall']:.3f} to {cw_t['recall']:.3f} while F1 does not fall "
+    f"(F1 = {cw_t['f1']:.3f} vs. the baseline's {R['WUSTL-EHMS-2020']['f1']:.3f}), and its ROC-AUC "
+    f"({cw['roc_auc_test']:.3f}) exceeds the baseline's ({EXTRA['WUSTL-EHMS-2020']['roc_auc']:.3f}) as "
+    "well, at a threshold selected on a held-out validation slice rather than cherry-picked against "
+    "the test set. Focal loss, by contrast, did not help: its validation-selected threshold reaches "
+    f"lower recall ({fl_t['recall']:.3f}) and a lower ROC-AUC ({fl['roc_auc_test']:.3f}, actually below "
+    f"the baseline's {EXTRA['WUSTL-EHMS-2020']['roc_auc']:.3f}) than either the baseline or the "
+    "class-weighted variant. Class-weighted BCE's improved recall (0.591) still falls well short of "
+    "gradient boosting's 0.809 on the identical split (Section 4.7), so this is a genuine but partial "
+    "fix: it narrows, without closing, the gap that motivates preferring the classical baseline on "
+    "this benchmark, and we report it as an incremental, honestly bounded improvement rather than a "
+    "resolution of the recall gap."
+)
+
+add_heading("4.12. True Sliding-Window Sequences for ECU-IoHT", level=2)
+add_para(
+    "Section 3.4 and Section 5.5 note that the recurrent layers in the main architecture see a "
+    "reshaped feature vector — each scalar feature treated as one pseudo-timestep with a single "
+    "channel — rather than a genuine sequence of ordered packets, and that this limits any claim of "
+    "learned temporal dynamics. To test directly whether giving the model real multi-packet "
+    "sequences changes this, we built sliding windows of T = 10 consecutive packets (each carrying "
+    "its own feature vector, in capture-time order) for ECU-IoHT under the same temporal split used "
+    "in Section 4.10, with each window labeled by its last packet's Attack/Normal status; the model "
+    "then receives genuine shape (T, n_features) input, and the Conv1D/LSTM/GRU/attention stack "
+    "operates over true packet order for the first time in this study."
+)
+add_para(
+    "An initial attempt reused the main experiment's Lionfish-selected hyperparameters and kept the "
+    "raw capture-time field as an input feature; it collapsed to predicting the majority class "
+    "(59.1% accuracy, recall 0.980 but precision 0.584), indistinguishable from the already-known "
+    "failure mode of the earlier, less rigorous version-1 temporal-split sensitivity pass "
+    "(Section 4.10). This comparison was confounded on two counts also identified in Section 4.10: "
+    "hyperparameters tuned for a different (random) split, and an absolute-timestamp feature whose "
+    "distribution differs systematically between the early-time training partition and the late-time "
+    "test partition. We therefore reran the sliding-window experiment matching every design choice of "
+    "Section 4.10's fair, budget-matched version-2 temporal-split baseline: the capture-time field "
+    "dropped from the feature set entirely, and the same independently-searched hyperparameters used "
+    "for that 85.8%-accuracy baseline (Table 11), so the sliding-window result differs from that "
+    "baseline in exactly one respect — genuine multi-packet sequences in place of the feature-axis "
+    "pseudo-sequence — for a fair, apples-to-apples test of the sequencing hypothesis."
+)
+add_table_caption("Table 11b. True sliding-window sequences (T = 10) vs. the fair flat-feature baseline, ECU-IoHT temporal split, identical hyperparameters and features.")
+sw = SLIDING_WINDOW_V2
+sw_base = sw["fair_comparison_baseline_sensitivity_v2"]
+add_table(
+    ["Representation", "Accuracy", "Precision", "Recall", "F1", "ROC-AUC"],
+    [
+        ["Flat feature-axis-as-sequence (Section 4.10, v2)", f"{sw_base['accuracy']*100:.2f}%",
+         f"{sw_base['precision']:.3f}", f"{sw_base['recall']:.3f}", f"{sw_base['f1']:.3f}",
+         f"{SENS2['ECU-IoHT']['roc_auc']:.3f}"],
+        ["True sliding-window sequence (T = 10)", f"{sw['accuracy']*100:.2f}%",
+         f"{sw['precision']:.3f}", f"{sw['recall']:.3f}", f"{sw['f1']:.3f}", f"{sw['roc_auc']:.3f}"],
+    ],
+)
+add_para(
+    f"With every other confound matched, true sliding-window sequences underperformed the simpler "
+    f"flat feature-axis representation on this benchmark: accuracy fell from {sw_base['accuracy']*100:.2f}% "
+    f"to {sw['accuracy']*100:.2f}%, and F1 from {sw_base['f1']:.3f} to {sw['f1']:.3f}, driven by a "
+    f"large drop in precision ({sw_base['precision']:.3f} to {sw['precision']:.3f}) alongside a "
+    f"smaller recall change ({sw_base['recall']:.3f} to {sw['recall']:.3f}) — the windowed model "
+    "leans further toward predicting the majority Attack class than the already imbalance-prone flat "
+    "baseline. We read this as a genuine, if negative, finding for this specific architecture and "
+    "windowing choice, not as evidence that temporal sequencing cannot help ECU-IoHT in general: a "
+    "fixed window length of 10 packets, no exploration of alternative window lengths or "
+    "stride/labeling schemes, and hyperparameters selected for the flat representation rather than "
+    "re-searched for the windowed one are all plausible reasons a genuinely informative sequence "
+    "representation could still under-deliver here. What this result does support is the narrower "
+    "claim already made in Section 3.4 and Section 5.5: this study's specific architecture and its "
+    "existing hyperparameters were not designed around, and do not obviously benefit from, a genuine "
+    "temporal-sequence input, and simply supplying one is not sufficient by itself to improve results."
+)
+
 # =======================================================================
 # 5. DISCUSSION
 # =======================================================================
@@ -1326,11 +1484,20 @@ add_para(
     "specifically did not help on WUSTL-EHMS-2020 at the tested budget, and Lionfish-tuned "
     "hyperparameters mattered far more than which layers were present. The random-search control in "
     "Section 4.9 shows Lionfish did not outperform unguided sampling at a matched budget on any "
-    "dataset, and was measurably worse on WUSTL-EHMS-2020. Taken together, these results do not "
+    "dataset, and was measurably worse on WUSTL-EHMS-2020; a follow-up three-seed comparison over an "
+    "expanded six-dimensional space (Section 4.9, Table 10a) confirms this rather than reversing it — "
+    "random search matched or slightly beat Lionfish on both benchmarks retested, with the gap not "
+    "statistically significant at three seeds. Taken together, these results do not "
     "support treating the hybrid architecture or the Lionfish optimizer as the source of whatever "
     "predictive value this framework has; the more defensible contribution is the evaluation "
     "protocol itself, and the willingness to report where classical, cheaper models are the better "
-    "engineering choice."
+    "engineering choice. Section 4.11's class-weighted loss experiment shows the WUSTL-EHMS-2020 "
+    "recall gap is partially, though not fully, addressable within the hybrid architecture itself, "
+    "and Section 4.12's sliding-window experiment shows that supplying the recurrent layers with a "
+    "genuine temporal sequence, rather than the feature-axis pseudo-sequence used throughout the "
+    "main experiment, did not by itself improve ECU-IoHT results under a fair, confound-matched "
+    "comparison — a further indication that this specific architecture's apparent strengths are not "
+    "well explained by genuine sequence modeling."
 )
 
 add_heading("5.3. Cross-Dataset Interpretation", level=2)
@@ -1408,8 +1575,13 @@ add_para(
     "datasets, and we do not interpret the LSTM/GRU components as having learned real temporal "
     "dynamics. Third, as Sections 4.7–4.9 show directly, classical baselines matched or exceeded the "
     "hybrid model on two of three benchmarks, and the Lionfish optimizer did not outperform random "
-    "search at a matched budget on any benchmark; readers should not take the architecture or "
-    "optimizer choices in this paper as validated improvements over simpler alternatives. Fourth, "
+    "search at a matched budget on any benchmark, a finding a follow-up three-seed test over an "
+    "expanded search space (Section 4.9) did not overturn; readers should not take the architecture "
+    "or optimizer choices in this paper as validated improvements over simpler alternatives. That "
+    "three-seed test is itself a small sample — n = 3 paired seeds cannot support strong statistical "
+    "claims of equivalence any more than of superiority — so \"no evidence of a Lionfish advantage\" "
+    "should be read as the honest limit of what this evaluation can establish, not as proof the two "
+    "methods perform identically in general. Fourth, "
     "the main experiment uses a record-level random stratified split; Section 4.10's alternative-split "
     "sensitivity analysis shows this materially overstates ECU-IoHT performance and moderately "
     "overstates WUSTL-EHMS-2020 recall, so the Section 4.4 numbers should be read as an upper bound "
@@ -1473,7 +1645,18 @@ add_para(
     "expose a preprocessing, feature, hyperparameter-transfer, or budget-driven artifact, yet unable "
     "to fully explain the result given the dataset's restricted-access provenance; we therefore treat "
     "DSICU's perfect score as an unresolved artifact requiring independent replication, not a "
-    "validated finding. We report all of this directly, including the instances where "
+    "validated finding. We followed up on two of these open questions directly rather than leaving "
+    "them solely to future work. A three-seed, budget-matched comparison over an expanded "
+    "six-dimensional search space confirmed that random search matches or slightly exceeds Lionfish "
+    "on both benchmarks retested, with the gap not statistically significant at this sample size — "
+    "reinforcing rather than reversing the single-run finding. A class-weighted loss recovered a "
+    "genuine, validation-selected improvement in WUSTL-EHMS-2020's attack-class recall (0.591 vs. "
+    "the baseline's 0.552) without sacrificing F1 or ROC-AUC, though it still falls well short of "
+    "gradient boosting's recall (0.809) on the identical split. A true sliding-window sequence "
+    "representation for ECU-IoHT, tested under a fair, confound-matched protocol against the "
+    "existing temporal-split baseline, underperformed the simpler feature-axis representation, "
+    "indicating that this architecture's results are not explained by genuine sequence modeling "
+    "either. We report all of this directly, including the instances where "
     "simpler methods outperformed the proposed architecture and where the proposed optimizer showed "
     "no measurable advantage, because we believe the paper's most useful contribution is not a claim "
     "that this specific hybrid architecture is state of the art, but a demonstration of how much "
@@ -1493,20 +1676,26 @@ add_para(
     "work on this problem should default to a strong gradient-boosting baseline and require any deep "
     "architecture to justify its added complexity against it, rather than assuming a hybrid deep "
     "network is the right starting point. Third, the Lionfish-vs-random-search result (Section 4.9) "
-    "should be retested with a larger evaluation budget, multiple repeated runs per method, and a "
-    "higher-dimensional search space, since a five-parameter space evaluated 42 times may simply be "
-    "too easy for any reasonable search strategy to distinguish. Fourth, the DSICU finding should be "
+    "was retested with a three-seed, six-dimensional follow-up that confirmed rather than reversed "
+    "the original finding; a still larger evaluation budget, more seeds, and a higher-dimensional or "
+    "qualitatively harder search space remain open directions for testing whether an advantage for "
+    "Lionfish emerges under conditions not covered here. Fourth, the DSICU finding should be "
     "replicated on an independently captured dataset of the same protocol mix to confirm its "
     "near-perfect separability generalizes beyond this single capture. Fifth, while this study's "
     "paired significance test (Section 4.3) already confirms the classical-baseline advantage on "
     "ECU-IoHT and WUSTL-EHMS-2020 within the cross-validation folds of a single split, the framework "
     "should further be evaluated across many independently reseeded train/test splits with the same "
-    "significance testing applied, and "
-    "class-imbalance-aware training strategies (e.g., focal loss or cost-sensitive learning) should "
-    "be assessed specifically for the WUSTL-EHMS-2020 recall gap. Generative approaches to synthetic "
-    f"minority-class augmentation, which have shown promise in other imbalanced medical "
-    f"data-reconstruction settings {cite('orig19')}, are a further direction for improving "
-    f"WUSTL-EHMS-2020 recall without discarding the split-before-fit protocol."
+    "significance testing applied. Sixth, a class-weighted loss (Section 4.11) recovered a genuine, "
+    "if partial, improvement in the WUSTL-EHMS-2020 recall gap; closing the remaining gap to "
+    "gradient boosting's recall likely requires combining this with the classical model's feature "
+    "representation, cost-sensitive decision thresholds tuned per deployment context, or the "
+    "generative approaches to synthetic minority-class augmentation that have shown promise in other "
+    f"imbalanced medical data-reconstruction settings {cite('orig19')}. Seventh, the true "
+    "sliding-window sequence experiment (Section 4.12) tested one fixed window length and labeling "
+    "scheme; a systematic sweep over window length, stride, and label definition, together with "
+    "hyperparameters re-searched specifically for the windowed representation rather than reused from "
+    "the flat baseline, is needed before concluding that genuine temporal sequencing cannot help "
+    "ECU-IoHT under any configuration."
 )
 
 # =======================================================================
@@ -1515,11 +1704,14 @@ add_para(
 add_backmatter(
     "Supplementary Materials",
     "The following supporting information is provided with this submission: preprocessing, model, "
-    "Lionfish optimization, classical-baseline, ablation, random-search, and sensitivity-analysis "
-    "code (code/); every raw result file underlying each table and figure, including cross-"
+    "Lionfish optimization, classical-baseline, ablation, random-search, sensitivity-analysis, "
+    "class-imbalance-mitigation, multi-seed optimizer-comparison, and sliding-window-sequence code "
+    "(code/); every raw result file underlying each table and figure, including cross-"
     "validation folds, Lionfish and random-search logs, ablation results, classical-baseline "
-    "results, extended probability-based metrics, and alternative-split sensitivity results "
-    "(results/); and the exact 0-indexed train/test row indices used for the main split for each "
+    "results, extended probability-based metrics, alternative-split sensitivity results, the "
+    "class-weighted/focal-loss recall-mitigation results, the three-seed Lionfish-vs-random-search "
+    "comparison, and the true sliding-window sequence results (results/); and the exact 0-indexed "
+    "train/test row indices used for the main split for each "
     "dataset (split_indices/), packaged as HMHDL_supplementary_materials.zip with an accompanying "
     "README."
 )
@@ -1556,8 +1748,9 @@ add_backmatter(
     "Acknowledgments",
     "During the preparation of this manuscript, the author(s) used Claude Sonnet 5 (Anthropic; model "
     "identifier claude-sonnet-5) for preprocessing pipeline implementation support; design and "
-    "implementation of the classical-baseline, architecture-ablation, random-search-control, and "
-    "sensitivity-analysis experiments; manuscript drafting assistance; and results-reporting "
+    "implementation of the classical-baseline, architecture-ablation, random-search-control, "
+    "sensitivity-analysis, class-imbalance-mitigation, multi-seed optimizer-comparison, and "
+    "sliding-window-sequence experiments; manuscript drafting assistance; and results-reporting "
     "formatting. The authors have reviewed and edited the output and take full responsibility for "
     "the content of this publication."
 )
