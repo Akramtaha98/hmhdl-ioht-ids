@@ -1,0 +1,15 @@
+
+ECU-IoHT [temporal (Time dropped as feature)]  train=77844 (attack 0.883)  test=33363 (attack 0.570)
+  random_forest            acc=0.9618 prec=0.9817 rec=0.9506 f1=0.9659
+  hist_gradient_boosting   acc=0.9618 prec=0.9817 rec=0.9506 f1=0.9659
+
+WUSTL-EHMS-2020 [temporal (Packet_num dropped as feature)]  train=11422 (attack 0.127)  test=4896 (attack 0.121)
+  random_forest            acc=0.9240 prec=0.9781 rec=0.3780 f1=0.5452
+  hist_gradient_boosting   acc=0.9175 prec=0.8616 rec=0.3831 f1=0.5285
+[dsicu_group_noid] 3020 train groups / 1102 test groups, train_rows=132323 test_rows=56371
+
+DSICU [group / srcport,dstport (ports dropped as feature)]  train=132323 (attack 0.439)  test=56371 (attack 0.391)
+  random_forest            acc=1.0000 prec=1.0000 rec=1.0000 f1=1.0000
+  hist_gradient_boosting   acc=1.0000 prec=1.0000 rec=1.0000 f1=1.0000
+
+Saved results/*_altsplit_baselines.json
