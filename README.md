@@ -56,6 +56,7 @@ supplementary/
 | `sensitivity_split.py` | v1 of the temporal (ECU-IoHT, WUSTL-EHMS-2020) and flow-grouped (DSICU) alternative-split robustness checks. Kept for transparency; superseded by v2. |
 | `no_identifier_check.py` | Re-runs the main (random) split with the capture-order/identifier-like field excluded from the model's input features, isolating its contribution independent of split choice. |
 | `sensitivity_split_v2.py` | Revised alternative-split analysis: hyperparameters found by an independently seeded search restricted to each alternative split's own training partition, identifier-like field excluded, budget matched to the main experiment in every respect except the split itself. |
+| `altsplit_classical_baselines.py` | Random forest and histogram gradient boosting on the **same** alternative splits as `sensitivity_split_v2.py` (temporal for ECU-IoHT / WUSTL-EHMS-2020, flow-grouped for DSICU; identifier-like field excluded; preprocessing fit on the training partition only). Needs only scikit-learn, NumPy and pandas (TensorFlow is stubbed out), and runs in under a minute on CPU. |
 | `repeated_seeds.py` | Trains the final model on the main split with three additional seeds under the identical budget as the original run, and summarizes all runs as mean ± standard deviation. |
 | `export_split_indices.py` | Regenerates the exact row indices for the main split and every alternative split (indices are also provided directly in `split_indices/`). |
 | `make_figures.py` | Regenerates every figure at 600 DPI from the result JSON files. |
@@ -84,6 +85,7 @@ Every raw result file is named `{Dataset}_{suffix}.json` for `Dataset` in `{ECU-
 | `sensitivity` | `sensitivity_split.py` (v1) |
 | `noid` | `no_identifier_check.py` |
 | `sensitivity_v2` | `sensitivity_split_v2.py train` (v2) |
+| `altsplit_baselines` | `altsplit_classical_baselines.py` (classical baselines on the v2 alternative splits) |
 | `seed43` / `seed44` / `seed45` | `repeated_seeds.py run` |
 | `repeated_seeds` | `repeated_seeds.py summarize` |
 
@@ -98,6 +100,28 @@ Every raw result file is named `{Dataset}_{suffix}.json` for `Dataset` in `{ECU-
 - `{Dataset}_altsplit_train_indices.csv` / `..._altsplit_test_indices.csv` — row indices for each dataset's **alternative** split (temporal order for ECU-IoHT/WUSTL-EHMS-2020, port-pair group assignment for DSICU).
 
 </details>
+
+## Classical baselines on the alternative splits
+
+`code/altsplit_classical_baselines.py` runs random forest (300 trees) and histogram gradient boosting (scikit-learn defaults) on the exact alternative splits used by `sensitivity_split_v2.py`, so they can be compared directly with the hybrid model's alternative-split results. Each model is run with seeds 42, 43 and 44 (the temporal splits are deterministic; the seeds vary only the models). Attack is the positive class. Results are written to `results/{Dataset}_altsplit_baselines.json`; the console log is `run_log.txt`.
+
+```bash
+python3 code/altsplit_classical_baselines.py                 # all three datasets
+python3 code/altsplit_classical_baselines.py ECU-IoHT        # or a single dataset
+```
+
+Mean over three seeds:
+
+| Dataset | Split | Model | Accuracy | Precision | Recall | F1 |
+|---|---|---|---|---|---|---|
+| ECU-IoHT | temporal | Random forest | 96.18% | 0.982 | 0.951 | 0.966 |
+| ECU-IoHT | temporal | Hist. gradient boosting | 96.18% | 0.982 | 0.951 | 0.966 |
+| WUSTL-EHMS-2020 | temporal | Random forest | 92.40% | 0.978 | 0.378 | 0.545 |
+| WUSTL-EHMS-2020 | temporal | Hist. gradient boosting | 91.75% | 0.862 | 0.383 | 0.529 |
+| DSICU | group / srcport,dstport | Random forest | 100.00% | 1.000 | 1.000 | 1.000 |
+| DSICU | group / srcport,dstport | Hist. gradient boosting | 100.00% | 1.000 | 1.000 | 1.000 |
+
+For comparison, the hybrid model reaches 85.79% accuracy (recall 0.951) on the ECU-IoHT temporal split and 90.50% accuracy (recall 0.385) on the WUSTL-EHMS-2020 temporal split (`results/*_sensitivity_v2.json`). These baselines use fixed default settings on a single deterministic split per dataset, so the comparison is indicative rather than exact.
 
 ## Random seeds
 
