@@ -1,0 +1,16 @@
+2026-10-26 23:10:02.314832: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793027402.322471 3923161 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793027402.325315 3923161 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793027402.332808 3923161 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793027402.332825 3923161 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793027402.332829 3923161 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793027402.332830 3923161 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793027404.866765 3923161 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140829 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:07:00.0, compute capability: 9.0
+I0000 00:00:1793027406.534355 3928804 cuda_dnn.cc:529] Loaded cuDNN version 90300
+42 hybrid AUC 0.9613 acc@.5 0.9618 acc@val-thr 0.9283 ECE 0.0599
+42 hgb AUC 0.9791 acc@.5 0.9618 acc@val-thr 0.4302 ECE 0.0688
+43 hybrid AUC 0.967 acc@.5 0.9618 acc@val-thr 0.9283 ECE 0.057
+43 hgb AUC 0.9775 acc@.5 0.9618 acc@val-thr 0.4302 ECE 0.0727
+44 hybrid AUC 0.9657 acc@.5 0.9256 acc@val-thr 0.9283 ECE 0.1091
+44 hgb AUC 0.9777 acc@.5 0.9618 acc@val-thr 0.4302 ECE 0.0753

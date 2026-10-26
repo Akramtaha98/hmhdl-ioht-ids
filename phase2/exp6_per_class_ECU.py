@@ -9,7 +9,7 @@ from common import *
 ap = common_args(__doc__); ap.add_argument('--hp', required=True); ap.add_argument('--epochs', type=int, default=80); ap.add_argument('--seed', type=int, default=42)
 a = ap.parse_args(); lab, order, drop = resolve(a); hp = json.loads(a.hp); out = dict(sklearn=sklearn.__version__)
 for kind in ('random', 'temporal'):
-    df, X, y, sub_t = load(a.csv, lab, drop + ([order] if kind == 'temporal' else []), a.attack_values, a.max_rows); X = encode(X); y = y.values
+    df, X, y, sub_t = load(a.csv, lab, drop + ([order] if kind == 'temporal' else []), a.attack_values, a.max_rows, sub_col=DATASETS['ECU']['sub']); X = encode(X); y = y.values
     tr, te = split(len(X), y, kind, a.seed, df[order]); Xtr, Xte, _ = prep(X.iloc[tr], X.iloc[te]); ytr, yte = y[tr], y[te]
     if kind == 'temporal': k = int(.8 * len(tr)); sub, val = np.arange(k), np.arange(k, len(tr))
     else: sub, val = train_test_split(np.arange(len(tr)), test_size=.2, stratify=ytr, random_state=a.seed)
@@ -18,10 +18,11 @@ for kind in ('random', 'temporal'):
          'rf': RandomForestClassifier(300, n_jobs=-1, random_state=a.seed).fit(Xtr, ytr).predict(Xte)}
     ste, str_ = sub_t[te], sub_t[tr]; rows = []
     for t in np.unique(ste):
-        if t.strip().lower() == 'normal': continue
-        msk = ste == t; rows.append(dict(subtype=t, n_test=int(msk.sum()), n_train=int((str_ == t).sum()),
+        msk = (ste == t) & (yte == 1)
+        if msk.sum() == 0: continue
+        rows.append(dict(subtype=t, n_test=int(msk.sum()), n_train=int((str_ == t).sum()),
                                          **{f'recall_{k}': float(v[msk].mean()) for k, v in P.items()}))
-    nm = ste == [s for s in np.unique(ste) if s.strip().lower() == 'normal'][0]
+    nm = (y[te] == 0)
     out[kind] = dict(per_subtype=rows, specificity={k: float(1 - v[nm].mean()) for k, v in P.items()}, overall={k: metrics(yte, v) for k, v in P.items()})
     print(kind); [print('  ', r) for r in rows]
 save(f'{a.out}/exp6_ECU_per_class.json', out)

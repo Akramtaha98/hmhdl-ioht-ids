@@ -1,0 +1,20 @@
+2026-10-26 23:20:38.364936: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793028038.372549  123585 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793028038.374800  123585 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793028038.382669  123585 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793028038.382690  123585 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793028038.382693  123585 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793028038.382695  123585 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793028040.331473  123585 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 139883 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:06:00.0, compute capability: 9.0
+I0000 00:00:1793028042.057095  124953 cuda_dnn.cc:529] Loaded cuDNN version 90300
+random
+   {'subtype': 'ARP Spoofing', 'n_test': 722, 'n_train': 1637, 'recall_hybrid': 1.0, 'recall_hgb': 1.0, 'recall_rf': 1.0}
+   {'subtype': 'DoS Attack', 'n_test': 205, 'n_train': 434, 'recall_hybrid': 0.4195121951219512, 'recall_hgb': 0.5853658536585366, 'recall_rf': 0.6585365853658537}
+   {'subtype': 'Nmap Port Scan', 'n_test': 2068, 'n_train': 4768, 'recall_hybrid': 0.9434235976789168, 'recall_hgb': 0.8844294003868471, 'recall_rf': 0.9647001934235977}
+   {'subtype': 'Smurf Attack', 'n_test': 23332, 'n_train': 54588, 'recall_hybrid': 1.0, 'recall_hgb': 1.0, 'recall_rf': 1.0}
+temporal
+   {'subtype': 'ARP Spoofing', 'n_test': 986, 'n_train': 1373, 'recall_hybrid': 1.0, 'recall_hgb': 1.0, 'recall_rf': 1.0}
+   {'subtype': 'DoS Attack', 'n_test': 627, 'n_train': 12, 'recall_hybrid': 0.0, 'recall_hgb': 0.0, 'recall_rf': 0.0}
+   {'subtype': 'Nmap Port Scan', 'n_test': 602, 'n_train': 6234, 'recall_hybrid': 0.48172757475083056, 'recall_hgb': 0.48172757475083056, 'recall_rf': 0.48172757475083056}
+   {'subtype': 'Smurf Attack', 'n_test': 16794, 'n_train': 61126, 'recall_hybrid': 1.0, 'recall_hgb': 1.0, 'recall_rf': 1.0}

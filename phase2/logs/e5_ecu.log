@@ -1,0 +1,20 @@
+2026-10-26 23:05:51.573857: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793027151.581663 3318876 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793027151.583861 3318876 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793027151.595179 3318876 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793027151.595209 3318876 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793027151.595212 3318876 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793027151.595213 3318876 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793027153.058941 3318876 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140143 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:06:00.0, compute capability: 9.0
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1793027153.964412 3321206 service.cc:152] XLA service 0x7816ec01c020 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1793027153.964447 3321206 service.cc:160]   StreamExecutor device (0): NVIDIA H200 NVL, Compute Capability 9.0
+I0000 00:00:1793027154.080869 3321206 cuda_dnn.cc:529] Loaded cuDNN version 90300
+I0000 00:00:1793027157.136839 3321206 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+random 42 [('dnn', 0.9348), ('cnn', 0.9829), ('lstm', 0.9353), ('rf', 0.9916), ('hgb', 0.9863)]
+random 43 [('dnn', 0.981), ('cnn', 0.9823), ('lstm', 0.9589), ('rf', 0.9913), ('hgb', 0.985)]
+random 44 [('dnn', 0.9818), ('cnn', 0.9802), ('lstm', 0.935), ('rf', 0.9904), ('hgb', 0.9852)]
+temporal 42 [('dnn', 0.7611), ('cnn', 0.7632), ('lstm', 0.7847), ('rf', 0.9618), ('hgb', 0.9618)]
+temporal 43 [('dnn', 0.7628), ('cnn', 0.764), ('lstm', 0.764), ('rf', 0.9618), ('hgb', 0.9618)]
+temporal 44 [('dnn', 0.7623), ('cnn', 0.7632), ('lstm', 0.764), ('rf', 0.9618), ('hgb', 0.9618)]

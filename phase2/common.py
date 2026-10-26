@@ -11,12 +11,12 @@ from sklearn.metrics import (accuracy_score, precision_score, recall_score, f1_s
                              roc_auc_score, average_precision_score, balanced_accuracy_score)
 
 DATASETS = {   # edit --label-col / --order-col on the command line if your CSV headers differ
-    'ECU':   dict(label='Type',   order='Time',       drop=[]),
-    'WUSTL': dict(label='Target', order='Packet_num', drop=[]),
+    'ECU':   dict(label='Type',  order='Time',       sub='Type of attack', drop=['Type of attack', 'No.', 'Source', 'Destination', 'Info']),
+    'WUSTL': dict(label='label', order='Packet_num', sub=None, drop=[]),
 }
 
 # ------------------------------------------------------------------ data
-def load(csv, label_col, drop_cols=(), attack_values=None, max_rows=None, seed=0):
+def load(csv, label_col, drop_cols=(), attack_values=None, max_rows=None, seed=0, sub_col=None):
     df = pd.read_csv(csv, low_memory=False); df.columns = [c.strip() for c in df.columns]
     if max_rows and len(df) > max_rows: df = df.sample(max_rows, random_state=seed).sort_index()
     lab = df[label_col]
@@ -24,7 +24,7 @@ def load(csv, label_col, drop_cols=(), attack_values=None, max_rows=None, seed=0
     elif not pd.api.types.is_numeric_dtype(lab):
         y = (~lab.astype(str).str.strip().str.lower().isin(['normal', 'benign', '0'])).astype(int)
     else: y = (lab != 0).astype(int)
-    sub = lab.astype(str).values                      # attack subtype, kept for per-class reports
+    sub = (df[sub_col] if sub_col and sub_col in df.columns else lab).astype(str).values                      # attack subtype, kept for per-class reports
     X = df.drop(columns=[c for c in [label_col, *drop_cols] if c in df.columns])
     return df, X, y.reset_index(drop=True), sub
 
@@ -89,7 +89,7 @@ def predict(m, X): return m.predict(X[..., None], batch_size=1024, verbose=0).ra
 
 # ------------------------------------------------------------------ search (LIRS / random), validation-based
 def fitness(v, Xs, ys, Xv, yv, epochs, seed):
-    hp = decode(v); m = fit(hp, Xs, ys, Xv, yv, epochs, patience=epochs, seed=seed)
+    hp = decode(v); m = fit(hp, Xs, ys, Xv, yv, epochs, patience=epochs, batch=512, seed=seed)
     return 1 - float(((predict(m, Xv) > .5) == yv).mean())
 
 def search(method, budget, Xs, ys, Xv, yv, epochs=5, seed=0, pop=10):
@@ -131,5 +131,5 @@ def common_args(desc):
     return ap
 
 def resolve(a):
-    d = DATASETS.get(a.name, dict(label=None, order=None, drop=[]))
+    d = DATASETS.get(a.name, dict(label=None, order=None, sub=None, drop=[]))
     return (a.label_col or d['label'], a.order_col or d['order'], a.drop_cols if a.drop_cols is not None else d['drop'])

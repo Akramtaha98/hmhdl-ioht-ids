@@ -1,0 +1,12 @@
+2026-10-26 21:33:15.538987: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793021595.546800  822652 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793021595.552678  822652 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793021595.561213  822652 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793021595.561228  822652 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793021595.561231  822652 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793021595.561232  822652 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793021601.685932  822652 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140801 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:06:00.0, compute capability: 9.0
+I0000 00:00:1793021603.886569  823455 cuda_dnn.cc:529] Loaded cuDNN version 90300
+lirs 45 {'blocks': 3, 'filters': 33, 'lstm': 17, 'gru': 42, 'dropout': 0.24290055380923442} val 0.983 test 0.9826
+random 45 {'blocks': 1, 'filters': 39, 'lstm': 55, 'gru': 24, 'dropout': 0.4515758836434375} val 0.9825 test 0.9818

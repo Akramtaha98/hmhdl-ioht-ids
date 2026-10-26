@@ -1,0 +1,131 @@
+{
+ "sklearn": "1.9.1",
+ "random": {
+  "per_subtype": [
+   {
+    "subtype": "ARP Spoofing",
+    "n_test": 722,
+    "n_train": 1637,
+    "recall_hybrid": 1.0,
+    "recall_hgb": 1.0,
+    "recall_rf": 1.0
+   },
+   {
+    "subtype": "DoS Attack",
+    "n_test": 205,
+    "n_train": 434,
+    "recall_hybrid": 0.4195121951219512,
+    "recall_hgb": 0.5853658536585366,
+    "recall_rf": 0.6585365853658537
+   },
+   {
+    "subtype": "Nmap Port Scan",
+    "n_test": 2068,
+    "n_train": 4768,
+    "recall_hybrid": 0.9434235976789168,
+    "recall_hgb": 0.8844294003868471,
+    "recall_rf": 0.9647001934235977
+   },
+   {
+    "subtype": "Smurf Attack",
+    "n_test": 23332,
+    "n_train": 54588,
+    "recall_hybrid": 1.0,
+    "recall_hgb": 1.0,
+    "recall_rf": 1.0
+   }
+  ],
+  "specificity": {
+   "hybrid": 0.9550881182490051,
+   "hgb": 0.9810972143263218,
+   "rf": 0.9805287094940307
+  },
+  "overall": {
+   "hybrid": {
+    "accuracy": 0.9834547252944879,
+    "balanced_acc": 0.9730619684951107,
+    "precision": 0.9880334759722801,
+    "recall": 0.9910358187412163,
+    "f1": 0.9895323700079645
+   },
+   "hgb": {
+    "accuracy": 0.9863021910499655,
+    "balanced_acc": 0.9843952285024704,
+    "precision": 0.9949112335475971,
+    "recall": 0.9876932426786189,
+    "f1": 0.9912890989840459
+   },
+   "rf": {
+    "accuracy": 0.9916074693522765,
+    "balanced_acc": 0.9875485116961551,
+    "precision": 0.9947950305839444,
+    "recall": 0.9945683138982794,
+    "f1": 0.9946816593222915
+   }
+  }
+ },
+ "temporal": {
+  "per_subtype": [
+   {
+    "subtype": "ARP Spoofing",
+    "n_test": 986,
+    "n_train": 1373,
+    "recall_hybrid": 1.0,
+    "recall_hgb": 1.0,
+    "recall_rf": 1.0
+   },
+   {
+    "subtype": "DoS Attack",
+    "n_test": 627,
+    "n_train": 12,
+    "recall_hybrid": 0.0,
+    "recall_hgb": 0.0,
+    "recall_rf": 0.0
+   },
+   {
+    "subtype": "Nmap Port Scan",
+    "n_test": 602,
+    "n_train": 6234,
+    "recall_hybrid": 0.48172757475083056,
+    "recall_hgb": 0.48172757475083056,
+    "recall_rf": 0.48172757475083056
+   },
+   {
+    "subtype": "Smurf Attack",
+    "n_test": 16794,
+    "n_train": 61126,
+    "recall_hybrid": 1.0,
+    "recall_hgb": 1.0,
+    "recall_rf": 1.0
+   }
+  ],
+  "specificity": {
+   "hybrid": 0.54841855928661,
+   "hgb": 0.9765918907621569,
+   "rf": 0.9765918907621569
+  },
+  "overall": {
+   "hybrid": {
+    "accuracy": 0.7775679645115847,
+    "balanced_acc": 0.749510452771823,
+    "precision": 0.7359889214727925,
+    "recall": 0.9506023462570361,
+    "f1": 0.8296411928100824
+   },
+   "hgb": {
+    "accuracy": 0.9617840122291161,
+    "balanced_acc": 0.9635971185095965,
+    "precision": 0.9817450831250679,
+    "recall": 0.9506023462570361,
+    "f1": 0.965922758252038
+   },
+   "rf": {
+    "accuracy": 0.9617840122291161,
+    "balanced_acc": 0.9635971185095965,
+    "precision": 0.9817450831250679,
+    "recall": 0.9506023462570361,
+    "f1": 0.965922758252038
+   }
+  }
+ }
+}
