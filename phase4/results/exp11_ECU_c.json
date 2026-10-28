@@ -1,0 +1,110 @@
+{
+ "sklearn": "1.9.1",
+ "args": {
+  "name": "ECU",
+  "csv": "../ECU_IoHT.csv",
+  "label_col": null,
+  "order_col": null,
+  "drop_cols": null,
+  "attack_values": null,
+  "max_rows": null,
+  "out": "results",
+  "hp": "{\"blocks\":2,\"filters\":27,\"lstm\":18,\"gru\":30,\"dropout\":0.23250975095270807}",
+  "outer_seeds": [
+   104
+  ],
+  "budget": 100,
+  "quick_epochs": 5,
+  "epochs": 80,
+  "patience": 8,
+  "tag": "c"
+ },
+ "runs": [
+  {
+   "outer_seed": 104,
+   "n_fit": 62275,
+   "n_val": 15569,
+   "n_test": 33363,
+   "lirs": {
+    "hp": {
+     "blocks": 2,
+     "filters": 42,
+     "lstm": 33,
+     "gru": 39,
+     "dropout": 0.32486641239118247
+    },
+    "best_search_val_acc": 0.9816301625024086,
+    "test": {
+     "accuracy": 0.9826754188771993,
+     "balanced_acc": 0.9713705413739342,
+     "precision": 0.9871722102395277,
+     "recall": 0.9909218672845368,
+     "f1": 0.9890434848542291,
+     "roc_auc": 0.9985462200777283,
+     "pr_auc": 0.9996302535887543
+    },
+    "minutes": 40.75690597693126
+   },
+   "random": {
+    "hp": {
+     "blocks": 2,
+     "filters": 28,
+     "lstm": 44,
+     "gru": 12,
+     "dropout": 0.19438062086478267
+    },
+    "best_search_val_acc": 0.9814374718992871,
+    "test": {
+     "accuracy": 0.982285765668555,
+     "balanced_acc": 0.9720088568591554,
+     "precision": 0.9877937831690675,
+     "recall": 0.9897823527177423,
+     "f1": 0.9887870681313677,
+     "roc_auc": 0.9981329840923808,
+     "pr_auc": 0.9995234225129284
+    },
+    "minutes": 41.91545435587565
+   },
+   "fixed_table_iv": {
+    "hp": {
+     "blocks": 2,
+     "filters": 27,
+     "lstm": 18,
+     "gru": 30,
+     "dropout": 0.23250975095270807
+    },
+    "test": {
+     "accuracy": 0.9804274195965591,
+     "balanced_acc": 0.9663011645441544,
+     "precision": 0.9845613770194775,
+     "recall": 0.990731948190071,
+     "f1": 0.9876370245555577,
+     "roc_auc": 0.9983896609902055,
+     "pr_auc": 0.999588279323875
+    }
+   },
+   "hgb_fit_subpartition": {
+    "test": {
+     "accuracy": 0.9860923777837725,
+     "balanced_acc": 0.9799403759853902,
+     "precision": 0.9917855105533372,
+     "recall": 0.9905800129144984,
+     "f1": 0.9911823951959257,
+     "roc_auc": 0.9990122992426148,
+     "pr_auc": 0.9997251223325537
+    }
+   },
+   "hgb_full_train": {
+    "test": {
+     "accuracy": 0.9856128046039025,
+     "balanced_acc": 0.9795323630450654,
+     "precision": 0.9917056652589126,
+     "recall": 0.9900482394499943,
+     "f1": 0.9908762592662992,
+     "roc_auc": 0.9989872043332736,
+     "pr_auc": 0.9997183918977205
+    }
+   }
+  }
+ ]
+}

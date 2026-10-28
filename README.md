@@ -18,6 +18,10 @@
 
 This repository is the full reproducibility package behind a study of IoHT intrusion detection across three benchmarks — **ECU-IoHT**, **WUSTL-EHMS-2020**, and **DSICU**. It includes every script used to preprocess the data, tune and train the hybrid model with the Lionfish Optimization Algorithm, run same-split classical baselines, run an architecture ablation and a random-search control, check robustness under alternative splits and identifier-feature removal, and regenerate every figure and table. All raw result files (JSON) and exact train/test split indices are included, so every number can be traced back to the file that produced it.
 
+## Phase 4 (latest)
+
+Instrumented temporal-validation reruns (exp10) and a full tune-and-train repeat on five reseeded splits (exp11): see [`phase4/README_phase4.md`](phase4/README_phase4.md).
+
 ## Contents
 
 | | |

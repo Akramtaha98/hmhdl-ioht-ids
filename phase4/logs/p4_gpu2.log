@@ -1,0 +1,28 @@
+2026-10-27 21:21:26.467911: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793107286.480657  423994 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793107286.484367  423994 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793107286.495004  423994 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.495031  423994 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.495036  423994 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.495039  423994 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793107290.844176  423994 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140829 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:75:00.0, compute capability: 9.0
+I0000 00:00:1793107294.911796  425145 cuda_dnn.cc:529] Loaded cuDNN version 90300
+104 {'lirs': 0.9827, 'random': 0.9823, 'fixed_table_iv': 0.9804, 'hgb_fit_subpartition': 0.9861, 'hgb_full_train': 0.9856}
+2026-10-27 22:45:38.910009: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793112338.918365  423991 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793112338.921205  423991 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793112338.928916  423991 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793112338.928943  423991 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793112338.928947  423991 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793112338.928948  423991 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793112341.395839  423991 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140829 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:75:00.0, compute capability: 9.0
+I0000 00:00:1793112344.088548 2392181 cuda_dnn.cc:529] Loaded cuDNN version 90300
+WARNING:tensorflow:5 out of the last 7 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7605e1122160> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:6 out of the last 9 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7605e1122160> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+100 {'lirs': 0.931, 'random': 0.9297, 'fixed_table_iv': 0.9265, 'hgb_fit_subpartition': 0.9724, 'hgb_full_train': 0.9726}
+101 {'lirs': 0.9336, 'random': 0.9346, 'fixed_table_iv': 0.9355, 'hgb_fit_subpartition': 0.9741, 'hgb_full_train': 0.9728}
+102 {'lirs': 0.9312, 'random': 0.9308, 'fixed_table_iv': 0.9324, 'hgb_fit_subpartition': 0.9645, 'hgb_full_train': 0.9718}
+103 {'lirs': 0.9295, 'random': 0.9338, 'fixed_table_iv': 0.9304, 'hgb_fit_subpartition': 0.9706, 'hgb_full_train': 0.9745}
+104 {'lirs': 0.9338, 'random': 0.935, 'fixed_table_iv': 0.9357, 'hgb_fit_subpartition': 0.9737, 'hgb_full_train': 0.9765}
