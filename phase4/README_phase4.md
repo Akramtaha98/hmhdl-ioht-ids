@@ -14,4 +14,4 @@ Reproduce the summary numbers (CPU only, needs numpy + scipy):
 
 Notes
 * The 43.02% temporal accuracy comes from scores tied exactly at the validation threshold under the strict `>` rule (`test_equal_thr` in exp10 results).
-* The scripts that generated the raw JSON files (`exp10_*.py`, `exp11_*.py`) are in this folder alongside the aggregation scripts.
+* TODO: add the scripts that generated the raw JSON files (`exp10_*.py`, `exp11_*.py`) to this folder.
