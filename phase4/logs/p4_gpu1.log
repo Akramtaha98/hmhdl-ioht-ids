@@ -1,0 +1,44 @@
+2026-10-27 21:21:26.169593: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793107286.181140  423993 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793107286.184362  423993 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793107286.193410  423993 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.193429  423993 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.193431  423993 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.193433  423993 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793107290.883276  423993 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 138091 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:07:00.0, compute capability: 9.0
+I0000 00:00:1793107294.087261  425405 cuda_dnn.cc:529] Loaded cuDNN version 90300
+A 42 tail hyb@.5 0.9075 thr 0.881279693841938 hgb@.5 0.9026
+A 42 window hyb@.5 0.9058 thr 0.9896890312433245 hgb@.5 0.9024
+A 43 tail hyb@.5 0.9101 thr 0.43680884420871796 hgb@.5 0.9026
+A 43 window hyb@.5 0.9112 thr 0.16970943510532452 hgb@.5 0.9024
+A 44 tail hyb@.5 0.9085 thr 0.31986165851355197 hgb@.5 0.9026
+A 44 window hyb@.5 0.9201 thr 0.9112504917383196 hgb@.5 0.9024
+A 45 tail hyb@.5 0.9058 thr 0.8526885461807269 hgb@.5 0.9026
+A 45 window hyb@.5 0.9103 thr 0.9638912570476538 hgb@.5 0.9024
+A 46 tail hyb@.5 0.9044 thr 0.8744031274318709 hgb@.5 0.9026
+A 46 window hyb@.5 0.9077 thr 0.9924512112140655 hgb@.5 0.9024
+B1 init seed 0 0.9065
+WARNING:tensorflow:5 out of the last 16 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7337d86ba200> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+B1 init seed 1 0.864
+WARNING:tensorflow:5 out of the last 11 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7337b877fce0> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+B1 init seed 2 0.9138
+B1 init seed 3 0.9134
+B1 init seed 4 0.9093
+B2 repeat_default [{'accuracy': 0.9103349673202614, 'epochs': 18}, {'accuracy': 0.9154411764705882, 'epochs': 19}, {'max_abs_score_diff': 0.8539398908615112}]
+2026-10-27 21:27:58.100542: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_15}}
+2026-10-27 21:28:14.977800: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-10-27 21:28:33.828061: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+B2 repeat_deterministic [{'accuracy': 0.9215686274509803, 'epochs': 19}, {'accuracy': 0.9123774509803921, 'epochs': 20}, {'max_abs_score_diff': 0.9610115885734558}]
+2026-10-27 21:28:39.829679: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793107719.844364  423990 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793107719.848070  423990 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793107719.859250  423990 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107719.859278  423990 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107719.859282  423990 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107719.859284  423990 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793107722.438524  423990 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 137237 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:07:00.0, compute capability: 9.0
+I0000 00:00:1793107725.575596  750016 cuda_dnn.cc:529] Loaded cuDNN version 90300
+102 {'lirs': 0.9824, 'random': 0.9823, 'fixed_table_iv': 0.9792, 'hgb_fit_subpartition': 0.9848, 'hgb_full_train': 0.9849}
+103 {'lirs': 0.9818, 'random': 0.9833, 'fixed_table_iv': 0.9814, 'hgb_fit_subpartition': 0.9856, 'hgb_full_train': 0.9854}

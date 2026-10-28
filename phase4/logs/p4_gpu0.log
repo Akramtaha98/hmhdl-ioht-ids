@@ -1,0 +1,44 @@
+2026-10-27 21:21:26.176863: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793107286.187264  423992 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793107286.190559  423992 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793107286.198484  423992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.198503  423992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.198506  423992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793107286.198507  423992 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793107290.862283  423992 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140829 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:06:00.0, compute capability: 9.0
+I0000 00:00:1793107294.260860  425274 cuda_dnn.cc:529] Loaded cuDNN version 90300
+A 42 tail hyb@.5 0.9618 thr 0.9999960660934448 hgb@.5 0.9618
+A 42 window hyb@.5 0.7828 thr 0.6778694987297058 hgb@.5 0.7514
+A 43 tail hyb@.5 0.9296 thr 0.9999936819076538 hgb@.5 0.9618
+A 43 window hyb@.5 0.7498 thr 0.7815716862678528 hgb@.5 0.7649
+A 44 tail hyb@.5 0.8852 thr 0.9999977350234985 hgb@.5 0.9618
+A 44 window hyb@.5 0.805 thr 0.46530604362487793 hgb@.5 0.7498
+A 45 tail hyb@.5 0.9603 thr 0.9999978542327881 hgb@.5 0.9618
+A 45 window hyb@.5 0.7676 thr 0.37324419617652893 hgb@.5 0.7498
+A 46 tail hyb@.5 0.9606 thr 0.999996542930603 hgb@.5 0.9618
+A 46 window hyb@.5 0.8201 thr 0.2967517375946045 hgb@.5 0.7498
+B1 init seed 0 0.9618
+B1 init seed 1 0.7776
+B1 init seed 2 0.7776
+B1 init seed 3 0.9618
+B1 init seed 4 0.7722
+B2 repeat_default [{'accuracy': 0.9133471210622546, 'epochs': 30}, {'accuracy': 0.9617840122291161, 'epochs': 63}, {'max_abs_score_diff': 0.9322549104690552}]
+2026-10-27 22:04:36.007308: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_15}}
+2026-10-27 22:04:41.267926: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_15}}
+2026-10-27 22:09:37.490072: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+2026-10-27 22:09:43.223994: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_15}}
+2026-10-27 22:11:53.629550: E tensorflow/core/framework/node_def_util.cc:680] NodeDef mentions attribute use_unbounded_threadpool which is not in the op definition: Op<name=MapDataset; signature=input_dataset:variant, other_arguments: -> handle:variant; attr=f:func; attr=Targuments:list(type),min=0; attr=output_types:list(type),min=1; attr=output_shapes:list(shape),min=1; attr=use_inter_op_parallelism:bool,default=true; attr=preserve_cardinality:bool,default=false; attr=force_synchronous:bool,default=false; attr=metadata:string,default=""> This may be expected if your graph generating binary is newer  than this binary. Unknown attributes will be ignored. NodeDef: {{node ParallelMapDatasetV2/_14}}
+B2 repeat_deterministic [{'accuracy': 0.9308515421275065, 'epochs': 65}, {'accuracy': 0.7775679645115847, 'epochs': 29}, {'max_abs_score_diff': 0.9934514164924622}]
+2026-10-27 22:11:58.131524: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:467] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+E0000 00:00:1793110318.139636  423989 cuda_dnn.cc:8579] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+E0000 00:00:1793110318.141890  423989 cuda_blas.cc:1407] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+W0000 00:00:1793110318.148173  423989 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793110318.148196  423989 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793110318.148200  423989 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+W0000 00:00:1793110318.148202  423989 computation_placer.cc:177] computation placer already registered. Please check linkage and avoid linking the same target more than once.
+I0000 00:00:1793110320.695770  423989 gpu_device.cc:2019] Created device /job:localhost/replica:0/task:0/device:GPU:0 with 140829 MB memory:  -> device: 0, name: NVIDIA H200 NVL, pci bus id: 0000:06:00.0, compute capability: 9.0
+I0000 00:00:1793110323.362123 1681907 cuda_dnn.cc:529] Loaded cuDNN version 90300
+100 {'lirs': 0.9346, 'random': 0.9433, 'fixed_table_iv': 0.9353, 'hgb_fit_subpartition': 0.9862, 'hgb_full_train': 0.986}
+101 {'lirs': 0.9812, 'random': 0.9825, 'fixed_table_iv': 0.9341, 'hgb_fit_subpartition': 0.9851, 'hgb_full_train': 0.9851}
